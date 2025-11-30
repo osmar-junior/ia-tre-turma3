@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop - IA na prática aplicada ao TRE/RN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        label:has(input[type="checkbox"]):hover {
+            background: #f0f7ff !important;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        input[type="checkbox"]:checked + strong {
+            color: #4caf50 !important;
+        }
+
+        input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #7e22ce;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
+        .duration {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e3c72, #7e22ce);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        .objectives {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .objectives h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .objectives ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.1em;
+        }
+
+        .objectives li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #7e22ce;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1e3c72;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+            background: #7e22ce;
+            color: white;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #1e3c72, #7e22ce);
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #7e22ce;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #2a5298;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .example-box {
+            background: #f8f9fa;
+            border-left: 4px solid #7e22ce;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .good-example {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+
+        .bad-example {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+        }
+
+        .example-box strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #1e3c72;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .tip-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .tip-box strong {
+            color: #856404;
+        }
+
+        .workshop-step {
+            background: #e3f2fd;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .workshop-step h4 {
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+
+        .reflection-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1e3c72, #7e22ce);
+            width: 0%;
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .subtitle {
+                font-size: 1.1em;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+        }
+        details summary {
+            transition: all 0.3s ease;
+        }
+
+        details summary:hover {
+            background: #bbdefb !important;
+            transform: translateX(5px);
+        }
+
+        details[open] summary {
+            margin-bottom: 15px;
+            border-bottom: 2px solid #2196f3;
+        }
+
+        /* Estilos para checkboxes do checklist */
+        label:has(input[type="checkbox"]):hover {
+            background: #f0f7ff !important;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        input[type="checkbox"]:checked + strong {
+            color: #4caf50 !important;
+        }
+
+        input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        /* Animação de fade in */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animação de flutuação para o ícone */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Animação de pulso para os badges */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Efeito hover nos badges */
+        header [style*="backdrop-filter"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+            transition: all 0.3s ease;
+        }
+
+        /* Responsividade aprimorada do header */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em !important;
+            }
+            
+            header [style*="backdrop-filter"] p {
+                font-size: 1.1em !important;
+            }
+            
+            header [style*="width: 100px"] {
+                width: 80px !important;
+                height: 80px !important;
+            }
+            
+            header [style*="width: 100px"] span {
+                font-size: 2.5em !important;
+            }
+            
+            header > div[style*="position: absolute"] {
+                display: none;
+            }
+            
+            header [style*="gap: 20px"] {
+                gap: 10px !important;
+            }
+            
+            header [style*="gap: 20px"] > div {
+                padding: 10px 20px !important;
+                font-size: 0.9em !important;
+            }
+            
+            header [style*="gap: 20px"] > div span:first-child {
+                font-size: 1.1em !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.6em !important;
+                margin-bottom: 12px !important;
+            }
+            
+            header [style*="backdrop-filter"] {
+                padding: 12px 25px !important;
+            }
+            
+            header [style*="backdrop-filter"] p {
+                font-size: 1em !important;
+            }
+            
+            header [style*="gap: 20px"] {
+                flex-direction: column;
+                gap: 8px !important;
+            }
+            
+            header [style*="gap: 20px"] > div {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Efeito de brilho animado */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 3s infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Efeito hover no e-mail do rodapé */
+        footer a {
+            position: relative;
+            display: inline-block;
+        }
+
+        footer a:hover {
+            color: var(--accent) !important;
+            opacity: 1 !important;
+            text-decoration: underline !important;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        footer a:hover::after {
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="container">
+
+        <header style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%); position: relative; overflow: hidden;">
+    <!-- Elementos decorativos de fundo -->
+    <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; z-index: 0;"></div>
+    <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255, 255, 255, 0.08); border-radius: 50%; z-index: 0;"></div>
+    <div style="position: absolute; top: 50%; left: 50%; width: 300px; height: 300px; background: rgba(126, 34, 206, 0.15); border-radius: 50%; transform: translate(-50%, -50%); z-index: 0;"></div>
+    
+    <!-- Padrão de linhas diagonais -->
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,0.03) 35px, rgba(255,255,255,0.03) 70px); z-index: 0;"></div>
+    
+    <div class="header-content" style="position: relative; z-index: 1;">
+        <!-- Ícone principal animado -->
+        <div style="display: inline-block; margin-bottom: 20px; animation: float 3s ease-in-out infinite;">
+            <div style="background: rgba(255, 255, 255, 0.2); width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); border: 3px solid rgba(255, 255, 255, 0.3); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);">
+                <span style="font-size: 3.5em;">⚖️</span>
+            </div>
+        </div>
+        
+        <h1 style="color: white; text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); margin-bottom: 15px; font-size: 2.8em; font-weight: 800; letter-spacing: -0.5px;">
+            Workshop - IA na prática aplicada ao TRE/RN
+        </h1>
+        
+        <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); display: inline-block; padding: 15px 35px; border-radius: 50px; margin-bottom: 25px; border: 2px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);">
+            <p style="color: white; font-size: 1.4em; margin: 0; font-weight: 600; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">
+                Engenharia de <i>Prompts</i>
+            </p>
+        </div>
+
+    </div>
+</header>
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showSection('fundamentos')">Fundamentos</button>
+            <button class="nav-btn" onclick="showSection('rcts')">Metodologia RCTS</button>
+            <button class="nav-btn" onclick="showSection('exemplos')">Exemplos</button>
+            <button class="nav-btn" onclick="showSection('templates')"><i>Templates</i></button>
+            <button class="nav-btn" onclick="showSection('erros')">Erros Comuns</button>
+            <button class="nav-btn" onclick="showSection('exercicios')">Exercícios Interativos</button>
+        </div>
+
+        
+        <div id="fundamentos" class="content-section active">
+            <h2><span class="emoji"></span> Fundamentos da Engenharia de <i>Prompts</i></h2>
+            
+            <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 30px;">
+                A Engenharia de <i>Prompts</i> é a <strong>linguagem de instrução</strong> que traduz intenções humanas em comandos compreensíveis por modelos de IA generativa. No contexto do serviço público eleitoral, dominar essa habilidade é fundamental para transformar a IA de uma ferramenta genérica em um assistente especializado para o TRE-RN.
+            </p>
+
+            <h3>✴️ O que é Engenharia de <i>Prompts</i></h3>
+            
+            <div style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 25px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #2196f3;">
+                <p style="font-size: 1.05em; line-height: 1.7;">
+                    <strong>Definição:</strong> Engenharia de <i>Prompts</i> é a disciplina de <b>construir, estruturar e refinar comandos textuais</b> para obter resultados precisos, relevantes e profissionais de sistemas de Inteligência Artificial generativa.
+                </p>
+                <p style="margin-top: 15px; font-size: 1.05em; line-height: 1.7;">
+                    Para servidores do TRE-RN, isso significa <strong>comunicar-se com a IA de forma tão precisa quanto se comunicaria com um colega ou assistente técnico</strong> - fornecendo contexto completo, instruções claras e expectativas definidas.
+                </p>
+            </div>
+
+            <h3>✴️ Por Que a Qualidade do <i>Prompt</i> Importa?</h3>
+            
+            <table style="margin: 25px 0;">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;"><i>Prompt</i> Simples (Genérico)</th>
+                        <th style="width: 50%;"><i>Prompt</i> Estratégico (Estruturado)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <ul style="padding-left: 20px; margin: 10px 0;">
+                                <li>Descritivo e superficial</li>
+                                <li>Sem contexto específico</li>
+                                <li>Resultado genérico e imprevisível</li>
+                                <li>Não replicável</li>
+                                <li>Exige muito retrabalho</li>
+                                <li>Desperdiça tempo e tokens</li>
+                            </ul>
+                        </td>
+                        <td style="vertical-align: top; background: #e8f5e9;">
+                            <ul style="padding-left: 20px; margin: 10px 0;">
+                                <li>Estruturado e contextual</li>
+                                <li>Informações completas e precisas</li>
+                                <li>Resultado profissional e focado</li>
+                                <li>Iterativo e refinável</li>
+                                <li>Minimiza revisões</li>
+                                <li>Maximiza produtividade</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="bad-example example-box">
+                <strong>❌ Exemplo de <i>Prompt</i> Simples (Ruim):</strong>
+                <p style="margin-top: 10px; font-style: italic;">"Resuma este processo eleitoral."</p>
+                
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                    <strong>🔍 Problemas:</strong>
+                    <ul style="margin-top: 8px; padding-left: 20px;">
+                        <li>Não define perspectiva profissional (para quem? por quê?)</li>
+                        <li>Não especifica o tipo de resumo (executivo, técnico, cronológico?)</li>
+                        <li>Não indica formato de saída (tópicos, parágrafos, tabela?)</li>
+                        <li>Não estabelece prioridades (o que é mais importante destacar?)</li>
+                        <li>Não define extensão (1 parágrafo ou 2 páginas?)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="good-example example-box">
+                <strong>✅ Exemplo de <i>Prompt</i> Estratégico (Bom):</strong>
+                <p style="margin-top: 10px; font-style: italic;">
+                    "Atue como servidor público especializado em Direito Eleitoral do TRE-RN <b>(ROLE)</b>. Analise o processo administrativo eleitoral anexo, que trata de investigação por abuso de poder econômico, protocolado em 15/03/2024 <b>(CONTEXT)</b>. Elabore resumo técnico destacando: 1) qualificação das partes, 2) fatos narrados, 3) fundamentos legais invocados (artigos e resoluções do TSE), 4) pedidos principais e cautelares, 5) provas requeridas <b>(TASK)</b>. Apresente em formato de tópicos numerados, com subtópicos quando necessário, linguagem técnica objetiva, evitando redundâncias. Extensão máxima: 1 página <b>(STYLE)</b>."
+                </p>
+                
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                    <strong>✅ Qualidades:</strong>
+                    <ul style="margin-top: 8px; padding-left: 20px;">
+                        <li>Define papel especializado (servidor do TRE-RN)</li>
+                        <li>Fornece contexto completo (tipo de processo, data, matéria)</li>
+                        <li>Lista tarefas específicas (5 elementos claros)</li>
+                        <li>Determina formato e estilo (tópicos, técnico, objetivo, 1 página)</li>
+                        <li>Resultado previsível e profissional</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 40px;">✴️ A IA é Literal: Exemplos Práticos</h3>
+
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin: 25px 0; border-radius: 8px;">
+                <h4 style="color: #856404; margin-top: 0;">⚠️ Caso 1: Ambiguidade Perigosa</h4>
+                
+                <p style="margin: 15px 0;"><strong><i>Prompt</i> ambíguo:</strong></p>
+                <p style="font-style: italic; background: white; padding: 10px; border-radius: 5px;">"Faça uma análise sobre o caso."</p>
+                
+                <p style="margin: 15px 0;"><strong>Problema:</strong></p>
+                <p>A IA não sabe:</p>
+                <ul style="padding-left: 20px; margin-top: 10px;">
+                    <li>Qual caso? (precisa do contexto completo)</li>
+                    <li>Análise técnica ou administrativa?</li>
+                    <li>Para quem? (chefia, setor jurídico, outra unidade?)</li>
+                    <li>Qual a pergunta específica a ser respondida?</li>
+                    <li>Qual extensão e formato?</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>Resultado provável:</strong> Análise genérica, superficial e inutilizável profissionalmente.</p>
+            </div>
+
+            <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 20px; margin: 25px 0; border-radius: 8px;">
+                <h4 style="color: #2e7d32; margin-top: 0;">✅ Caso 2: Clareza e Precisão</h4>
+                
+                <p style="margin: 15px 0;"><strong><i>Prompt</i> claro e preciso:</strong></p>
+                <p style="font-style: italic; background: white; padding: 15px; border-radius: 5px; line-height: 1.8;">
+                    "Atue como servidor público do setor de licitações do TRE-RN <b>(ROLE)</b>. Elabore análise técnica sobre processo de dispensa de licitação para contratação de serviços de manutenção predial emergencial. Valor: R$ 85.000,00. Justificativa: necessidade de reparos urgentes no sistema de ar-condicionado do prédio sede antes do período eleitoral. Fundamentação legal: art. 24, inciso II da Lei 14.133/2021 <b>(CONTEXT)</b>. A análise deve conter: 1) enquadramento legal da dispensa, 2) análise da urgência declarada, 3) parecer sobre a estimativa de valor, 4) jurisprudência do TCU sobre casos similares, 5) recomendações para instrução processual <b>(TASK)</b>. Formato: relatório técnico com itens numerados (Introdução, Análise, Conclusão), linguagem técnica mas clara, até 3 páginas, incluir referências legais e jurisprudenciais <b>(STYLE)</b>."
+                </p>
+                
+                <p style="margin-top: 15px;"><strong>Resultado esperado:</strong> Análise completa, estruturada, fundamentada e pronta para revisão técnica final.</p>
+            </div>
+
+            <h3 style="margin-top: 40px;">✴️ Especificidade × Criatividade: O Equilíbrio</h3>
+
+            <div style="background: white; padding: 25px; border-radius: 10px; border: 2px solid #6c757d; margin: 25px 0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="background: linear-gradient(135deg, #6c757d, #495057);">Nível de Especificidade</th>
+                            <th style="background: linear-gradient(135deg, #6c757d, #495057);">Quando Usar</th>
+                            <th style="background: linear-gradient(135deg, #6c757d, #495057);">Exemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Alta Especificidade</strong><br>(<i>Prompt</i> muito detalhado)</td>
+                            <td>
+                                • Pareceres técnicos<br>
+                                • Relatórios administrativos<br>
+                                • Análises processuais<br>
+                                • Quando precisa de precisão máxima
+                            </td>
+                            <td style="font-size: 0.9em; font-style: italic;">"Elabore minuta de portaria para criação de comissão de processo seletivo interno, incluindo: composição, atribuições, prazo de 60 dias..."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Média Especificidade</strong><br>(<i>Prompt</i> estruturado mas flexível)</td>
+                            <td>
+                                • Brainstorming de soluções<br>
+                                • Pesquisa inicial<br>
+                                • Resumos e análises<br>
+                                • Quando quer explorar opções
+                            </td>
+                            <td style="font-size: 0.9em; font-style: italic;">"Atue como servidor da área de gestão de pessoas. Liste as principais estratégias para capacitação de servidores em tecnologias emergentes."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Baixa Especificidade</strong><br>(<i>Prompt</i> genérico)</td>
+                            <td>
+                                • Exploração inicial de tema<br>
+                                • Educação básica<br>
+                                • Ideias gerais<br>
+                                <strong style="color: #c62828;">⚠️ NUNCA para trabalho profissional</strong>
+                            </td>
+                            <td style="font-size: 0.9em; font-style: italic;">"Explique o que é licitação."<br><span style="color: #c62828;">(Adequado apenas para estudo inicial)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Regra Prática de Ouro:</strong>
+                <p style="margin-top: 10px; font-size: 1.05em; line-height: 1.7;">
+                    <strong>Quanto mais importante e profissional o resultado desejado, mais específico e estruturado deve ser o <i>prompt</i>.</strong>
+                </p>
+                <p style="margin-top: 15px;">
+                    Para trabalhos que serão apresentados à chefia, utilizados em processos administrativos ou decisões estratégicas, invista tempo construindo <i>prompts</i> completos com todos os elementos RCTS (que veremos na próxima seção).
+                </p>
+            </div>
+
+            <div class="reflection-box" style="margin-top: 40px;">
+                <h3 style="color: white; border: none; padding: 0; margin-bottom: 15px;">🎯 Reflexão Final</h3>
+                <p style="font-size: 1.15em; line-height: 1.7;">
+                    A diferença entre usar IA como "Google turbinado" e como "assistente especializado" está inteiramente na qualidade dos seus <i>prompts</i>.
+                </p>
+                <p style="margin-top: 15px; font-style: italic;">
+                    <i>Prompts</i> claros, estruturados e específicos são a ponte entre intenção humana e execução artificial.
+                </p>
+            </div>
+        </div>
+
+        <div id="rcts" class="content-section">
+            <h2><span class="emoji"></span> Metodologia RCTS </h2>
+            
+            <p>A metodologia RCTS foi criada para estruturar <i>prompts</i> com consistência e resultados reproduzíveis.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Elemento</th>
+                        <th>Pergunta-chave</th>
+                        <th>Exemplo para Servidores do TRE-RN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong><i>Role</i> (Papel)</strong></td>
+                        <td>"Quem você quer que a IA seja?"</td>
+                        <td>"Você é um servidor público especialista em Direito Eleitoral do TRE-RN."</td>
+                    </tr>
+                    <tr>
+                        <td><strong><i>Context</i> (Contexto)</strong></td>
+                        <td>"Qual é a situação ou o material de apoio?"</td>
+                        <td>"Analise o texto da Resolução nº 23.610/2019 do TSE sobre propaganda eleitoral."</td>
+                    </tr>
+                    <tr>
+                        <td><strong><i>Task</i> (Tarefa)</strong></td>
+                        <td>"O que exatamente deve ser feito?"</td>
+                        <td>"Elabore um resumo explicativo com foco nas regras para horário eleitoral gratuito."</td>
+                    </tr>
+                    <tr>
+                        <td><strong><i>Style</i> (Estilo)</strong></td>
+                        <td>"Como o resultado deve ser apresentado?"</td>
+                        <td>"Em formato de tópicos numerados, com linguagem técnica e objetiva."</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>✴️ <i>Role</i> (Papel)</h3>
+            <div class="example-box">
+                <p>Defina quem a IA deve ser para obter o resultado desejado:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Servidor especialista:</strong> "Você é um servidor público especialista em licitações com 10 anos de experiência"</li>
+                    <li><strong>Analista técnico:</strong> "Atue como analista de gestão de pessoas do TRE-RN"</li>
+                    <li><strong>Instrutor:</strong> "Você é um instrutor de Direito Eleitoral explicando para novos servidores"</li>
+                    <li><strong>Consultor interno:</strong> "Atue como consultor de tecnologia da informação do TRE-RN"</li>
+                </ul>
+            </div>
+
+            <h3>✴️ <i>Context</i> (Contexto)</h3>
+            <div class="example-box">
+                <p>Forneça informações relevantes para a tarefa:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Legislação específica:</strong> "Com base na Lei nº 14.133/2021 (Nova Lei de Licitações)"</li>
+                    <li><strong>Situação administrativa:</strong> "Um setor recebeu uma solicitação de aquisição de 50 computadores"</li>
+                    <li><strong>Documento anexo:</strong> "Analise o processo administrativo eleitoral anexo"</li>
+                    <li><strong>Jurisprudência:</strong> "Considerando o entendimento do TSE no REsp 1.234.567"</li>
+                </ul>
+            </div>
+
+            <h3>✴️ <i>Task</i> (Tarefa)</h3>
+            <div class="example-box">
+                <p>Seja específico sobre o que deve ser feito:</p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Análise:</strong> "Analise a viabilidade jurídica de..."</li>
+                    <li><strong>Elaboração:</strong> "Elabore uma minuta de ofício para..."</li>
+                    <li><strong>Resumo:</strong> "Resuma os principais pontos do processo destacando..."</li>
+                    <li><strong>Comparação:</strong> "Compare as diferenças entre os regimes de..."</li>
+                    <li><strong>Extração:</strong> "Extraia os fundamentos legais citados no acórdão"</li>
+                </ul>
+            </div>
+
+            <h3>✴️ <i>Style</i> (Estilo)</h3>
+            <div class="example-box" style="background: #f0f7ff; border-left-color: #2196f3;">
+                <p><strong>1. Texto Corrido (Parágrafo)</strong></p>
+                <p style="margin: 10px 0; padding-left: 15px; font-style: italic;">"Apresente em formato de texto corrido, com linguagem formal e técnica, dividido em parágrafos bem estruturados."</p>
+                <p style="padding-left: 15px;"><strong>Uso ideal:</strong> Pareceres, relatórios, ofícios</p>
+            </div>
+
+            <div class="example-box" style="background: #f0f7ff; border-left-color: #2196f3;">
+                <p><strong>2. Tópicos com Marcadores (<i>Bullets Points</i>)</strong></p>
+                <p style="margin: 10px 0; padding-left: 15px; font-style: italic;">"Liste em tópicos com marcadores, sendo cada tópico uma ideia principal, com linguagem objetiva e direta."</p>
+                <p style="padding-left: 15px;"><strong>Uso ideal:</strong> Resumos executivos, checklists, briefings</p>
+            </div>
+
+            <div class="example-box" style="background: #f0f7ff; border-left-color: #2196f3;">
+                <p><strong>3. Lista Numerada</strong></p>
+                <p style="margin: 10px 0; padding-left: 15px; font-style: italic;">"Organize em lista numerada sequencial, onde cada item representa uma etapa ou argumento na ordem de importância."</p>
+                <p style="padding-left: 15px;"><strong>Uso ideal:</strong> Procedimentos, argumentos sequenciais, instruções</p>
+            </div>
+
+            <div class="example-box" style="background: #f0f7ff; border-left-color: #2196f3;">
+                <p><strong>4. Tabela Comparativa</strong></p>
+                <p style="margin: 10px 0; padding-left: 15px; font-style: italic;">"Apresente em formato de tabela com colunas para [Aspecto], [Lei A], [Lei B], [Diferenças], permitindo comparação visual."</p>
+                <p style="padding-left: 15px;"><strong>Uso ideal:</strong> Análise comparativa de leis, regimes jurídicos, jurisprudências</p>
+            </div>
+
+            <div class="example-box" style="background: #f0f7ff; border-left-color: #2196f3;">
+                <p><strong>5. Perguntas e Respostas (Q&A)</strong></p>
+                <p style="margin: 10px 0; padding-left: 15px; font-style: italic;">"Estruture em formato de perguntas e respostas, onde cada questão é seguida de resposta clara e fundamentada."</p>
+                <p style="padding-left: 15px;"><strong>Uso ideal:</strong> FAQ, materiais didáticos, orientações a cidadãos</p>
+            </div>
+
+            <div class="example-box" style="background: #f0f7ff; border-left-color: #2196f3;">
+                <p><strong>6. Esquema Visual (Outline)</strong></p>
+                <p style="margin: 10px 0; padding-left: 15px; font-style: italic;">"Organize em esquema hierárquico com títulos principais e subtópicos indentados, facilitando a visualização da estrutura."</p>
+                <p style="padding-left: 15px;"><strong>Uso ideal:</strong> Organização de ideias, estrutura de relatórios, planejamento</p>
+            </div>
+
+            <div class="example-box" style="background: #f0f7ff; border-left-color: #2196f3;">
+                <p><strong>7. Quadro Resumo</strong></p>
+                <p style="margin: 10px 0; padding-left: 15px; font-style: italic;">"Crie um quadro-resumo contendo: [Problema], [Fundamento Legal], [Solução Proposta], [Riscos], de forma sintética."</p>
+                <p style="padding-left: 15px;"><strong>Uso ideal:</strong> Síntese de casos, decisões estratégicas, apresentações</p>
+            </div>
+
+            <h3>💡 Especificações Adicionais de Estilo</h3>
+            <div class="tip-box">
+                <p><strong>Você também pode especificar:</strong></p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Tom:</strong> formal, técnico, didático, persuasivo</li>
+                    <li><strong>Tamanho:</strong> máximo de 500 palavras, 3 parágrafos, 5 tópicos</li>
+                    <li><strong>Público:</strong> para leigos, para servidores, para chefia</li>
+                    <li><strong>Linguagem:</strong> simples, técnico-administrativa, acessível</li>
+                    <li><strong>Elementos:</strong> incluir citações legais, jurisprudência, doutrina</li>
+                </ul>
+            </div>
+
+            <div class="good-example example-box">
+                <strong>✅ Exemplo Completo RCTS:</strong>
+                <p>"Atue como servidor público especialista em Direito Eleitoral do TRE-RN <b>(ROLE)</b>. Analise o texto da Resolução nº 23.610/2019 <b>(CONTEXT)</b>. Elabore um resumo com foco nos artigos que tratam de propaganda eleitoral <b>(TASK)</b>. Apresente em formato de tópicos numerados, com linguagem técnica e objetiva <b>(STYLE)</b>."</p>
+                <p style="margin-top: 15px;"><strong>Resultado esperado:</strong> <i>prompt</i> mais preciso, relevante e replicável.</p>
+            </div>
+
+            <div class="good-example example-box" style="margin-top: 20px;">
+                <strong>✅ Exemplo com Estilo de Tabela:</strong>
+                <p>"Você é um servidor público da área de licitações <b>(ROLE)</b>. Considerando as mudanças na Lei 14.133/2021 em relação à Lei 8.666/93 <b>(CONTEXT)</b>. Compare as principais diferenças entre o regime antigo e o novo <b>(TASK)</b>. Apresente em formato de tabela com 4 colunas: Aspecto, Lei 8.666/93, Lei 14.133/2021, Impacto Prático. Use linguagem técnica mas acessível <b>(STYLE)</b>."</p>
+            </div>
+
+            <div class="good-example example-box" style="margin-top: 20px;">
+                <strong>✅ Exemplo com Estilo Q&A:</strong>
+                <p>"Atue como servidor da área de atendimento ao público <b>(ROLE)</b>. Um cidadão tem dúvidas sobre o processo de votação e apuração eleitoral <b>(CONTEXT)</b>. Crie um guia de orientações básicas <b>(TASK)</b>. Use formato de perguntas e respostas (Q&A), com 5 perguntas principais e respostas objetivas de até 3 parágrafos cada, linguagem acessível mas precisa <b>(STYLE)</b>."</p>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 20px; margin-top: 20px; border-radius: 10px; text-align: center;">
+                <p style="font-size: 1.1em; font-weight: 600;">💡 <i>Prompts</i> bem estruturados = Resultados profissionais</p>
+                <p style="margin-top: 10px; opacity: 0.9;">Invista tempo no <i>prompt</i>, economize tempo na revisão!</p>
+            </div>
+
+        </div>
+
+        <div id="exemplos" class="content-section">
+            <h2><span class="emoji"></span> Exemplos Práticos: Processo de Melhoria Contínua </h2>
+            
+            <p style="margin-bottom: 30px;">Veja como um <i>prompt</i> evolui através de iterações sucessivas, identificando problemas e aplicando melhorias até alcançar um resultado ideal.</p>
+
+            <h3>✴️ Caso 1: Elaboração de Ofício</h3>
+
+            <div class="bad-example example-box">
+                <strong>❌ ITERAÇÃO 1 - <i>Prompt</i> Inicial (Ruim)</strong>
+                <p style="margin: 15px 0; font-style: italic;">"Faça um ofício."</p>
+                 
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                    <strong>🔍 Problemas identificados:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li><strong>Sem papel definido (ROLE):</strong> A IA não sabe que perspectiva adotar</li>
+                        <li><strong>Sem contexto (CONTEXT):</strong> Qual tipo de ofício? Para qual situação?</li>
+                        <li><strong>Tarefa vaga (TASK):</strong> "Fazer" é muito genérico</li>
+                        <li><strong>Sem estilo (STYLE):</strong> Não especifica formato ou tom</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="example-box" style="background: #fff8e1; border-left-color: #ffa726;">
+                <strong>⚠️ ITERAÇÃO 2 - Primeira Melhoria</strong>
+                <p style="margin: 15px 0; font-style: italic;">"Elabore um ofício de solicitação de informações."</p>
+                
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                    <strong>✅ Melhorias aplicadas:</strong>
+                    <ul style="padding-left: 20px;">
+                        <li>Tarefa mais específica: "ofício de solicitação de informações"</li>
+                    </ul>
+                    <strong style="display: block; margin-top: 15px;">🔍 Problemas restantes:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li><strong>Ainda sem papel:</strong> Não define quem está elaborando</li>
+                        <li><strong>Falta contexto:</strong> Solicitação de quê? Para quem? Qual fundamento?</li>
+                        <li><strong>Sem estilo definido:</strong> Formato e linguagem não especificados</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="example-box" style="background: #e3f2fd; border-left-color: #42a5f5;">
+                <strong>📈 ITERAÇÃO 3 - Segunda Melhoria</strong>
+                <p style="margin: 15px 0; font-style: italic;">"Você é um servidor público. Elabore um ofício de solicitação de informações sobre andamento processual ao Cartório Eleitoral de Mossoró."</p>
+                
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                    <strong>✅ Melhorias aplicadas:</strong>
+                    <ul style="padding-left: 20px;">
+                        <li><strong>Papel definido (ROLE):</strong> "Você é um servidor público"</li>
+                        <li><strong>Contexto básico (CONTEXT):</strong> Tipo de solicitação e destinatário</li>
+                    </ul>
+                    <strong style="display: block; margin-top: 15px;">🔍 Problemas restantes:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li><strong>Papel genérico:</strong> Poderia especificar área de atuação</li>
+                        <li><strong>Contexto incompleto:</strong> Falta indicar processo específico, prazo, fundamento legal</li>
+                        <li><strong>Sem formato definido:</strong> Estrutura e elementos do ofício não especificados</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="good-example example-box">
+                <strong>✅ ITERAÇÃO 4 - <i>Prompt</i> Otimizado (Excelente)</strong>
+                <p style="margin: 15px 0; font-style: italic;">"Atue como servidor público da Secretaria de Gestão de Pessoas do TRE-RN <b>(ROLE)</b>. Elabore um ofício de solicitação de informações sobre o andamento do Processo Administrativo SEI nº 12345/2024, que trata de progressão funcional de servidores. O ofício será dirigido ao Cartório Eleitoral de Mossoró/RN, solicitando informações sobre: 1) situação atual do processo, 2) previsão de conclusão, 3) necessidade de documentação complementar. Fundamentar na Lei 8.112/90 (art. 23) e no Regimento Interno do TRE-RN <b>(CONTEXT)</b>. Incluir: número do ofício, destinatário, referência, texto da solicitação, fecho, data e assinatura <b>(TASK)</b>. Utilize linguagem administrativa formal, estrutura padrão de ofício, com fundamentação legal pertinente <b>(STYLE)</b>."</p>
+                
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                    <strong>✅ Todos os elementos RCTS aplicados:</strong>
+                    <ul style="padding-left: 20px;">
+                        <li><strong>R - Role:</strong> Servidor da Secretaria de Gestão de Pessoas do TRE-RN</li>
+                        <li><strong>C - Contexto:</strong> Número do processo, destinatário, informações solicitadas, fundamento legal</li>
+                        <li><strong>T - Tarefa:</strong> Elementos específicos do ofício claramente listados</li>
+                        <li><strong>E - Estilo:</strong> Linguagem administrativa formal, estrutura padrão</li>
+                    </ul>
+                    <strong style="display: block; margin-top: 15px; color: #2e7d32;">🎯 Resultado esperado:</strong>
+                    <p style="margin-top: 10px;">Ofício completo, estruturado, tecnicamente correto e pronto para revisão e ajustes finais.</p>
+                </div>
+            </div>
+
+            <hr style="margin: 40px 0; border: none; border-top: 2px solid #e0e0e0;">
+
+            <h3>✴️ Caso 2: Análise de Processo Administrativo</h3>
+
+            <div class="bad-example example-box">
+                <strong>❌ ITERAÇÃO 1 - <i>Prompt</i> Inicial (Ruim)</strong>
+                <p style="margin: 15px 0; font-style: italic;">"Analise este processo."</p>
+                
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                    <strong>🔍 Problemas identificados:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li><strong>Sem papel (ROLE):</strong> Qual perspectiva de análise?</li>
+                        <li><strong>Sem contexto (CONTEXT):</strong> Que tipo de processo? Qual documento?</li>
+                        <li><strong>Tarefa genérica (TASK):</strong> "Analisar" é muito amplo</li>
+                        <li><strong>Sem estilo (STYLE):</strong> Formato de resposta indefinido</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="example-box" style="background: #fff8e1; border-left-color: #ffa726;">
+                <strong>⚠️ ITERAÇÃO 2 - Primeira Melhoria</strong>
+                <p style="margin: 15px 0; font-style: italic;">"Analise este processo administrativo disciplinar e identifique vícios."</p>
+                
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                    <strong>✅ Melhorias aplicadas:</strong>
+                    <ul style="padding-left: 20px;">
+                        <li>Tipo de processo especificado: "administrativo disciplinar"</li>
+                        <li>Objetivo definido: "identificar vícios"</li>
+                    </ul>
+                    <strong style="display: block; margin-top: 15px;">🔍 Problemas restantes:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li><strong>Sem papel definido:</strong> Análise sob qual perspectiva?</li>
+                        <li><strong>Contexto limitado:</strong> Não indica legislação aplicável ou situação específica</li>
+                        <li><strong>Sem formato de saída:</strong> Como apresentar os achados?</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="example-box" style="background: #e3f2fd; border-left-color: #42a5f5;">
+                <strong>📈 ITERAÇÃO 3 - Segunda Melhoria</strong>
+                <p style="margin: 15px 0; font-style: italic;">"Você é um servidor público especialista em Direito Administrativo. Analise este processo administrativo disciplinar instaurado contra servidor por suposta irregularidade em licitação, identificando vícios com base na Lei 8.112/90 e na jurisprudência do STJ. O servidor alega cerceamento de defesa."</p>
+                
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                    <strong>✅ Melhorias aplicadas:</strong>
+                    <ul style="padding-left: 20px;">
+                        <li><strong>Papel definido (ROLE):</strong> Servidor especialista em Direito Administrativo</li>
+                        <li><strong>Contexto enriquecido (CONTEXT):</strong> Tipo de processo, alegação específica, legislação aplicável</li>
+                    </ul>
+                    <strong style="display: block; margin-top: 15px;">🔍 Problemas restantes:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li><strong>Tarefa pode ser mais detalhada:</strong> O que fazer além de identificar?</li>
+                        <li><strong>Sem formato especificado:</strong> Tabela? Relatório? Tópicos?</li>
+                        <li><strong>Falta diretriz de profundidade:</strong> Análise superficial ou aprofundada?</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="good-example example-box">
+                <strong>✅ ITERAÇÃO 4 - <i>Prompt</i> Otimizado (Excelente)</strong>
+                <p style="margin: 15px 0; font-style: italic;">"Atue como servidor público especialista em Direito Administrativo e Processo Disciplinar, com experiência em análise de processos do TRE-RN <b>(ROLE)</b>. Analise o Processo Administrativo Disciplinar SEI nº 54321/2024 anexo, instaurado contra o servidor João Silva (matrícula 12345) por suposta irregularidade em processo licitatório para aquisição de urnas eletrônicas. O servidor alega cerceamento de defesa por não ter tido acesso integral aos autos. Considere a Lei 8.112/90 (arts. 145 a 182), Súmula 473 do STF sobre ampla defesa, e jurisprudência do STJ sobre nulidade processual <b>(CONTEXT)</b>. Identifique todos os vícios processuais, explique o fundamento legal de cada vício, sugira medidas para regularização processual, e avalie os riscos de anulação do processo <b>(TASK)</b>. Apresente em formato de tabela com 5 colunas: [Vício Identificado], [Dispositivo Processual], [Problema Jurídico], [Fundamento Legal], [Grau de Gravidade: Alto/Médio/Baixo]. Ao final, inclua um parecer conclusivo em texto corrido de até 3 parágrafos. Use linguagem técnico-administrativa <b>(STYLE)</b>."</p>
+                
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                    <strong>✅ Todos os elementos RCTS aplicados:</strong>
+                    <ul style="padding-left: 20px;">
+                        <li><strong>R - Role:</strong> Servidor especialista com foco específico em processo disciplinar</li>
+                        <li><strong>C - Contexto:</strong> Número do processo, servidor identificado, alegação específica, legislação e jurisprudência aplicável</li>
+                        <li><strong>T - Tarefa:</strong> 4 ações claras (identificar, explicar, sugerir, avaliar riscos)</li>
+                        <li><strong>E - Estilo:</strong> Formato de tabela detalhado + parecer conclusivo, linguagem definida</li>
+                    </ul>
+                    <strong style="display: block; margin-top: 15px; color: #2e7d32;">🎯 Resultado esperado:</strong>
+                    <p style="margin-top: 10px;">Análise completa, estruturada, fundamentada, com soluções práticas e linguagem adequada para apresentação à chefia.</p>
+                </div>
+            </div>
+
+            <div class="reflection-box" style="margin-top: 40px; background: linear-gradient(135deg, #1e3c72, #2a5298);">
+                <h3 style="color: white; border: none; padding: 0; margin-bottom: 15px;">💡 Lições do Processo Iterativo</h3>
+                <p>A cada iteração, identificamos lacunas específicas e aplicamos melhorias incrementais.</p>
+                <p style="margin-top: 15px;">O <i>prompt</i> ideal emerge da combinação de: <strong>clareza de propósito + contexto rico + formato definido + linguagem adequada</strong>.</p>
+                <p style="margin-top: 15px; font-style: italic;">Lembre-se: nenhum <i>prompt</i> nasce perfeito. A iteração é parte natural do processo!</p>
+            </div>
+        </div>
+
+
+        <div id="templates" class="content-section">
+            <h2><span class="emoji"></span> Biblioteca de Templates RCTS</h2>
+    
+            <p style="margin-bottom: 30px;"><i>Templates</i> prontos para copiar, adaptar e usar. Substitua os campos entre colchetes pelas informações do seu caso específico.</p>
+
+            <h3>✴️ <i>Template</i> 1: Análise de Legislação</h3>
+            <div class="good-example example-box">
+                <p><strong>Copie e adapte:</strong></p>
+                <div style="font-family: 'Courier New', monospace; background: white; padding: 20px; border-radius: 5px; margin-top: 10px; border: 1px solid #ddd;">
+                    Atue como servidor(a) público(a) especialista em [ÁREA - ex: Direito Eleitoral, Licitações] com [X] anos de experiência <b>(ROLE)</b>. Analise a [LEI/RESOLUÇÃO/PORTARIA - ex: Resolução TSE nº 23.610/2019] no que se refere a [TEMA ESPECÍFICO - ex: propaganda eleitoral na internet] <b>(CONTEXT)</b>. [IDENTIFIQUE/EXPLIQUE/COMPARE] os [ASPECTOS - ex: principais mudanças em relação à resolução anterior, artigos relevantes, jurisprudência aplicável] <b>(TASK)</b>. Apresente em formato de [FORMATO - ex: tópicos numerados/tabela comparativa/texto corrido], com linguagem [TÉCNICA/ACESSÍVEL/DIDÁTICA] voltada para [PÚBLICO - ex: servidores/chefia/cidadãos] <b>(STYLE)</b>.
+                </div>
+                <button class="nav-btn" onclick="copyTemplate(this)" style="margin-top: 15px; background: linear-gradient(135deg, #4caf50, #45a049);">📋 Copiar <i>Template</i></button>
+            </div>
+
+            <h3>✴️ <i>Template</i> 2: Elaboração de Documentos Administrativos</h3>
+            <div class="good-example example-box">
+                <p><strong>Copie e adapte:</strong></p>
+                <div style="font-family: 'Courier New', monospace; background: white; padding: 20px; border-radius: 5px; margin-top: 10px; border: 1px solid #ddd;">
+                    Você é servidor(a) público(a) especialista em [ÁREA - ex: Administração, Direito Administrativo] <b>(ROLE)</b>. Elabore uma minuta de [TIPO DE DOCUMENTO - ex: ofício, portaria, relatório, parecer técnico] referente a [SITUAÇÃO - ex: solicitação de informações, criação de comissão, análise de processo]. Destinatário: [QUEM RECEBE - ex: Cartório Eleitoral, Secretaria, Chefia]. Fundamente-se nos [DISPOSITIVOS LEGAIS - ex: Lei 8.112/90, Regimento Interno do TRE-RN] e na [JURISPRUDÊNCIA/DOUTRINA pertinente] <b>(CONTEXT)</b>. O documento deve incluir: [ELEMENTOS - ex: timbre, número, destinatário, referência, texto, fecho, data, assinatura] <b>(TASK)</b>. Utilize estrutura em [FORMATO - ex: tópicos numerados/parágrafos corridos], com linguagem [TOM - ex: técnico-administrativa formal/objetiva], respeitando as normas do Manual de Redação Oficial <b>(STYLE)</b>.
+                </div>
+                <button class="nav-btn" onclick="copyTemplate(this)" style="margin-top: 15px; background: linear-gradient(135deg, #4caf50, #45a049);">📋 Copiar <i>Template</i></button>
+            </div>
+
+            <h3>✴️ <i>Template</i> 3: Análise de Processos Administrativos</h3>
+            <div class="good-example example-box">
+                <p><strong>Copie e adapte:</strong></p>
+                <div style="font-family: 'Courier New', monospace; background: white; padding: 20px; border-radius: 5px; margin-top: 10px; border: 1px solid #ddd;">
+                    Atue como servidor(a) público(a) especialista em [ÁREA - ex: Processo Administrativo, Direito Disciplinar] <b>(ROLE)</b>. Analise o [TIPO DE PROCESSO - ex: processo administrativo disciplinar, processo de aquisição, processo eleitoral] anexo, protocolado em [DATA]. As partes são: [PARTE 1 - nome/qualificação] e [PARTE 2 - nome/qualificação]. O objetivo da análise é [FINALIDADE - ex: identificar vícios processuais, avaliar legalidade de atos, verificar conformidade com a legislação vigente]. Considere [LEGISLAÇÃO APLICÁVEL - ex: Lei 8.112/90, Lei 14.133/2021, Resoluções do TSE] e [CONTEXTO ESPECÍFICO - ex: alegação de cerceamento de defesa, necessidade de decisão em prazo determinado] <b>(CONTEXT)</b>. [AÇÃO 1 - ex: Identifique todos os problemas/vícios], [AÇÃO 2 - ex: explique o fundamento legal de cada irregularidade], [AÇÃO 3 - ex: sugira medidas corretivas], [AÇÃO 4 - ex: avalie os riscos jurídicos/administrativos] <b>(TASK)</b>. Apresente em formato de [FORMATO - ex: tabela com colunas: Problema, Dispositivo, Fundamento Legal, Sugestão / relatório com tópicos / parecer em texto corrido]. Ao final, inclua um [ELEMENTO ADICIONAL - ex: parecer conclusivo em até 2 parágrafos, recomendações práticas]. Use linguagem [TOM - ex: técnico-administrativa/estritamente jurídica] <b>(STYLE)</b>.
+                </div>
+                <button class="nav-btn" onclick="copyTemplate(this)" style="margin-top: 15px; background: linear-gradient(135deg, #4caf50, #45a049);">📋 Copiar <i>Template</i></button>
+            </div>
+
+            <h3>✴️ <i>Template</i> 4: Pesquisa Jurisprudencial</h3>
+            <div class="good-example example-box">
+                <p><strong>Copie e adapte:</strong></p>
+                <div style="font-family: 'Courier New', monospace; background: white; padding: 20px; border-radius: 5px; margin-top: 10px; border: 1px solid #ddd;">
+                    Você é um(a) pesquisador(a) jurídico(a) especializado(a) em [ÁREA - ex: Direito Eleitoral, Direito Administrativo] <b>(ROLE)</b>. Analise a seguinte jurisprudência: [IDENTIFICAÇÃO - ex: Acórdão do TSE, REsp do STJ, Tema Repetitivo]. O caso trata de [MATÉRIA - ex: inelegibilidade, processo licitatório, responsabilidade fiscal]. Contexto: [SITUAÇÃO - ex: servidor possui caso similar e precisa entender a aplicabilidade do precedente] <b>(CONTEXT)</b>. [AÇÃO 1 - ex: Resuma os fatos do caso], [AÇÃO 2 - ex: identifique a tese jurídica firmada], [AÇÃO 3 - ex: explique os fundamentos da decisão], [AÇÃO 4 - ex: avalie a aplicabilidade ao caso concreto do TRE-RN], [AÇÃO 5 - ex: indique se há outros precedentes relevantes] <b>(TASK)</b>. Apresente em [FORMATO - ex: estrutura de fichamento com tópicos: Dados do julgado, Fatos, Tese, Fundamentos, Aplicabilidade / formato Q&A / tabela comparativa]. Linguagem [TOM - ex: técnico-jurídica objetiva/acessível para apresentação à chefia] <b>(STYLE)</b>.
+                </div>
+                <button class="nav-btn" onclick="copyTemplate(this)" style="margin-top: 15px; background: linear-gradient(135deg, #4caf50, #45a049);">📋 Copiar <i>Template</i></button>
+            </div>
+
+            <h3>✴️ <i>Template</i> 5: Parecer Técnico</h3>
+            <div class="good-example example-box">
+                <p><strong>Copie e adapte:</strong></p>
+                <div style="font-family: 'Courier New', monospace; background: white; padding: 20px; border-radius: 5px; margin-top: 10px; border: 1px solid #ddd;">
+                    Atue como servidor(a) público(a) parecerista especializado(a) em [ÁREA - ex: Direito Administrativo, Licitações, Gestão de Pessoas] <b>(ROLE)</b>. Elabore parecer técnico sobre [QUESTÃO - ex: legalidade de processo licitatório, viabilidade de criação de cargo, conformidade de ato administrativo]. Solicitante: [QUEM SOLICITA - ex: Chefia, Setor, Comissão]. Contexto: [SITUAÇÃO DETALHADA - ex: o setor pretende realizar X, mas há dúvidas sobre Y; recebemos notificação Z]. Legislação aplicável: [NORMAS - ex: Lei 14.133/21, Lei 8.112/90, Resolução TSE]. Há [PRECEDENTES/DOUTRINA - mencionar se houver] <b>(CONTEXT)</b>. O parecer deve: [ESTRUTURA - ex: 1) Relatório dos fatos, 2) Análise técnica fundamentada, 3) Conclusão objetiva, 4) Recomendações práticas] <b>(TASK)</b>. Formato: [ESPECIFICAÇÃO - ex: parecer formal com numeração de parágrafos, máximo de 3 páginas, incluir referências legais]. Linguagem [TOM - ex: técnica e imparcial/assertiva e consultiva]. Incluir ao final um quadro-resumo com: Questão, Resposta, Fundamento, Risco <b>(STYLE)</b>.
+                </div>
+                <button class="nav-btn" onclick="copyTemplate(this)" style="margin-top: 15px; background: linear-gradient(135deg, #4caf50, #45a049);">📋 Copiar <i>Template</i></button>
+            </div>
+
+            <h3>✍✴️ <i>Template</i> 6: Comunicação Interna</h3>
+            <div class="good-example example-box">
+                <p><strong>Copie e adapte:</strong></p>
+                <div style="font-family: 'Courier New', monospace; background: white; padding: 20px; border-radius: 5px; margin-top: 10px; border: 1px solid #ddd;">
+                    Você é servidor(a) público(a) [ÁREA - ex: da Secretaria de Tecnologia, da Coordenadoria de Gestão de Pessoas] com habilidade em comunicação clara <b>(ROLE)</b>. Elabore um [TIPO DE COMUNICAÇÃO - ex: e-mail, memorando, comunicado interno] para os [DESTINATÁRIOS - ex: servidores, chefias, setores], explicando [ASSUNTO - ex: mudanças em procedimentos, novas orientações, atualizações normativas]. Contexto: [SITUAÇÃO - ex: implementação de novo sistema, alteração em norma interna, necessidade de uniformização de procedimentos] <b>(CONTEXT)</b>. A comunicação deve: [OBJETIVOS - ex: 1) explicar a situação de forma compreensível, 2) apresentar mudanças com prós e contras, 3) solicitar providências ou adesão, 4) tranquilizar e demonstrar organização] <b>(TASK)</b>. Tom: [ESPECIFICAÇÃO - ex: profissional mas acessível, claro e direto, evitando burocratês, transmitindo segurança]. Estrutura: [FORMATO - ex: saudação, resumo da situação, explicação técnica simplificada, próximos passos, encerramento cordial]. Máximo de [X parágrafos/linhas] <b>(STYLE)</b>.
+                </div>
+                <button class="nav-btn" onclick="copyTemplate(this)" style="margin-top: 15px; background: linear-gradient(135deg, #4caf50, #45a049);">📋 Copiar <i>Template</i></button>
+            </div>
+
+            <div class="tip-box" style="margin-top: 40px;">
+                <strong>💡 Dica de Uso dos <i>Template</i>:</strong>
+                <p style="margin-top: 10px;">Os <i>template</i> são pontos de partida, não fórmulas mágicas. Quanto mais você personalizar com detalhes do seu caso concreto, melhor será o resultado da IA.</p>
+                <p style="margin-top: 10px;"><strong>Passo a passo:</strong></p>
+                <ol style="margin-top: 10px; padding-left: 20px;">
+                    <li>Copie o template</li>
+                    <li>Substitua TODOS os campos entre colchetes</li>
+                    <li>Adicione informações específicas do seu caso</li>
+                    <li>Execute na sua IA de preferência</li>
+                    <li>Revise e refine o resultado</li>
+                    <li>SEMPRE valide informações legais e normativas</li>
+                </ol>
+            </div>
+
+            <div class="reflection-box" style="margin-top: 30px;">
+                <h3 style="color: white; border: none; padding: 0; margin-bottom: 15px;">🎯 Lembre-se</h3>
+                <p>Um bom <i>template</i> economiza tempo, mas a expertise técnica vem de você!</p>
+                <p style="margin-top: 15px; font-style: italic;">A IA é sua assistente, não sua substituta.</p>
+            </div>
+        </div>
+
+        <div id="erros" class="content-section">
+            <h2><span class="emoji"></span> Os 7 Erros Mais Comuns em <i>Prompts</i></h2>
+            
+            <p style="margin-bottom: 30px;">Aprenda com os erros mais frequentes e saiba como evitá-los para obter resultados profissionais.</p>
+
+            <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 25px; margin: 20px 0; border-radius: 8px;">
+                <h3 style="color: #c62828; margin-top: 0;">❌ Erro #1: <i>Prompt</i> Muito Genérico</h3>
+                
+                <div style="background: white; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                    <strong style="color: #d32f2f;">Exemplo do erro:</strong>
+                    <p style="font-style: italic; margin-top: 8px;">"Faça um relatório."</p>
+                </div>
+
+                <div style="background: #fff9c4; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #fbc02d;">
+                    <strong style="color: #f57f17;">📌 Por que é problemático:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>A IA não tem parâmetros para gerar resposta focada</li>
+                        <li>Resultado será superficial e genérico demais para uso profissional</li>
+                        <li>Faltam elementos essenciais (objetivo, destinatário, conteúdo específico)</li>
+                    </ul>
+                </div>
+
+                <div style="background: #e8f5e9; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #4caf50;">
+                    <strong style="color: #2e7d32;">✅ Como corrigir:</strong>
+                    <p style="margin-top: 10px;">Adicione especificidade em TODOS os elementos RCTS:</p>
+                    <p style="font-style: italic; margin-top: 10px; padding: 10px; background: white; border-radius: 4px;">
+                        "Atue como servidor público da área de orçamento <b>(ROLE)</b>. Elabore relatório trimestral de execução orçamentária do TRE-RN referente ao 1º trimestre de 2024, destacando: despesas com pessoal, investimentos em tecnologia, custeio administrativo. Comparar com o mesmo período de 2023. Destinatário: Secretaria de Orçamento <b>(CONTEXT)</b>. Inclua: resumo executivo, tabelas comparativas, análise dos principais desvios, recomendações para o próximo trimestre <b>(TASK)</b>. Linguagem técnico-administrativa, formato de relatório estruturado com subtítulos, com até 10 páginas <b>(STYLE)</b>."
+                    </p>
+                </div>
+            </div>
+
+            <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 25px; margin: 20px 0; border-radius: 8px;">
+                <h3 style="color: #c62828; margin-top: 0;">❌ Erro #2: Assumir Conhecimento Prévio da IA</h3>
+                
+                <div style="background: white; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                    <strong style="color: #d32f2f;">Exemplo do erro:</strong>
+                    <p style="font-style: italic; margin-top: 8px;">"Continue a análise do processo que discutimos antes."</p>
+                </div>
+
+                <div style="background: #fff9c4; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #fbc02d;">
+                    <strong style="color: #f57f17;">📌 Por que é problemático:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>A IA não tem memória de conversas anteriores (exceto no mesmo <i>chat</i>)</li>
+                        <li>Cada <i>prompt</i> deve ser autocontido e completo</li>
+                        <li>Referências vagas geram respostas imprecisas ou incorretas</li>
+                    </ul>
+                </div>
+
+                <div style="background: #e8f5e9; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #4caf50;">
+                    <strong style="color: #2e7d32;">✅ Como corrigir:</strong>
+                    <p style="margin-top: 10px;">Sempre forneça contexto completo, mesmo que seja continuação:</p>
+                    <p style="font-style: italic; margin-top: 10px; padding: 10px; background: white; border-radius: 4px;">
+                        "Você é servidor público da área jurídica <b>(ROLE)</b>. No caso anterior, analisamos Processo Administrativo nº 12345/2024, que trata de suposta irregularidade em licitação para aquisição de equipamentos de informática. Valor: R$ 500.000,00. Empresa licitante: Tech Solutions Ltda. Foram identificados indícios de superfaturamento <b>(CONTEXT)</b>. Agora, elabore o parecer jurídico conclusivo deste processo <b>(TASK)</b>. Formato: parecer formal com fundamentação legal, análise das provas, conclusão e recomendações <b>(STYLE)</b>."
+                    </p>
+                </div>
+            </div>
+
+            <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 25px; margin: 20px 0; border-radius: 8px;">
+                <h3 style="color: #c62828; margin-top: 0;">❌ Erro #3: Múltiplas Tarefas em Um Único <i>Prompt</i></h3>
+                
+                <div style="background: white; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                    <strong style="color: #d32f2f;">Exemplo do erro:</strong>
+                    <p style="font-style: italic; margin-top: 8px;">"Analise este processo, identifique vícios, faça um parecer, elabore um ofício e sugira soluções."</p>
+                </div>
+
+                <div style="background: #fff9c4; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #fbc02d;">
+                    <strong style="color: #f57f17;">📌 Por que é problemático:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Resultados superficiais em todas as tarefas</li>
+                        <li>A IA divide atenção e profundidade entre múltiplos objetivos</li>
+                        <li>Dificulta revisão e aproveitamento dos resultados</li>
+                        <li>Perde-se qualidade técnica e detalhamento</li>
+                    </ul>
+                </div>
+
+                <div style="background: #e8f5e9; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #4caf50;">
+                    <strong style="color: #2e7d32;">✅ Como corrigir:</strong>
+                    <p style="margin-top: 10px;">Separe em <i>prompts</i> sequenciais, um para cada tarefa:</p>
+                    <div style="margin-top: 15px;">
+                        <p style="font-weight: 600; color: #1e3c72;"><i>Prompt</i> 1 - Análise:</p>
+                        <p style="font-style: italic; margin-top: 5px; padding: 10px; background: white; border-radius: 4px; font-size: 0.95em;">
+                            "Analise o processo anexo identificando todos os vícios processuais..."
+                        </p>
+                        
+                        <p style="font-weight: 600; color: #1e3c72; margin-top: 15px;"><i>Prompt</i> 2 - Parecer (após receber análise):</p>
+                        <p style="font-style: italic; margin-top: 5px; padding: 10px; background: white; border-radius: 4px; font-size: 0.95em;">
+                            "Com base nos vícios processuais identificados [colar resultado anterior], elabore parecer jurídico fundamentado..."
+                        </p>
+                        
+                        <p style="font-weight: 600; color: #1e3c72; margin-top: 15px;"><i>Prompt</i> 3 - Ofício (após parecer):</p>
+                        <p style="font-style: italic; margin-top: 5px; padding: 10px; background: white; border-radius: 4px; font-size: 0.95em;">
+                            "Utilizando os fundamentos do parecer [colar], elabore minuta de ofício..."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 25px; margin: 20px 0; border-radius: 8px;">
+                <h3 style="color: #c62828; margin-top: 0;">❌ Erro #4: Não Especificar Formato de Saída</h3>
+                
+                <div style="background: white; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                    <strong style="color: #d32f2f;">Exemplo do erro:</strong>
+                    <p style="font-style: italic; margin-top: 8px;">"Resuma este processo de 50 páginas."</p>
+                </div>
+
+                <div style="background: #fff9c4; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #fbc02d;">
+                    <strong style="color: #f57f17;">📌 Por que é problemático:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>A IA escolhe formato aleatório (pode ser inadequado)</li>
+                        <li>Resultado pode ser longo demais ou curto demais</li>
+                        <li>Estrutura imprevisível dificulta uso profissional</li>
+                        <li>Pode omitir informações que você considera essenciais</li>
+                    </ul>
+                </div>
+
+                <div style="background: #e8f5e9; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #4caf50;">
+                    <strong style="color: #2e7d32;">✅ Como corrigir:</strong>
+                    <p style="margin-top: 10px;">Sempre defina formato, estrutura e extensão:</p>
+                    <p style="font-style: italic; margin-top: 10px; padding: 10px; background: white; border-radius: 4px;">
+                        "Resuma o processo anexa <b>(TASK)</b> em formato de tabela com 4 colunas: [Tópico], [Conteúdo], [Fundamento Legal], [Página]. Inclua: qualificação das partes, pedidos, contestação, provas, fundamentos da decisão, dispositivo. Máximo de 2 páginas, linguagem técnica objetiva <b>(STYLE)</b>."
+                    </p>
+                    <p style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 4px; font-size: 0.95em;">
+                        <strong>Alternativas de formato:</strong> tópicos numerados, bullet points, quadro-resumo, linha do tempo, Q&A, texto corrido com subtítulos, fluxograma textual.
+                    </p>
+                </div>
+            </div>
+
+            <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 25px; margin: 20px 0; border-radius: 8px;">
+                <h3 style="color: #c62828; margin-top: 0;">❌ Erro #5: Linguagem Ambígua ou Imprecisa</h3>
+                
+                <div style="background: white; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                    <strong style="color: #d32f2f;">Exemplo do erro:</strong>
+                    <p style="font-style: italic; margin-top: 8px;">"Faça uma análise administrativa sobre aquele problema de licitação."</p>
+                </div>
+
+                <div style="background: #fff9c4; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #fbc02d;">
+                    <strong style="color: #f57f17;">📌 Por que é problemático:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Termos vagos ("aquele", "administrativa", "problema") geram interpretações múltiplas</li>
+                        <li>Resultados inconsistentes e imprevisíveis</li>
+                        <li>Impossível replicar o mesmo resultado</li>
+                        <li>Dificulta iteração e refinamento</li>
+                    </ul>
+                </div>
+
+                <div style="background: #e8f5e9; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #4caf50;">
+                    <strong style="color: #2e7d32;">✅ Como corrigir:</strong>
+                    <p style="margin-top: 10px;">Use termos técnicos precisos e inequívocos:</p>
+                    <p style="font-style: italic; margin-top: 10px; padding: 10px; background: white; border-radius: 4px;">
+                        "Atue como servidor público especialista em licitações <b>(ROLE)</b>. Analise o Processo Licitatório nº 67890/2024 do TRE-RN para aquisição de 100 computadores, que apresenta indícios de direcionamento para a empresa ABC Informática. Valor estimado: R$ 800.000,00. Editais publicados em 15/02/2024 <b>(CONTEXT)</b>. Avalie: 1) legalidade das especificações técnicas à luz do art. 6º da Lei 14.133/2021, 2) caracterização de vício de direcionamento, 3) jurisprudência do TCU sobre casos similares <b>(TASK)</b>. Formato: parecer estruturado em tópicos, com fundamentação legal e jurisprudencial, conclusão objetiva, máximo 3 páginas <b>(STYLE)</b>."
+                    </p>
+                </div>
+            </div>
+
+            <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 25px; margin: 20px 0; border-radius: 8px;">
+                <h3 style="color: #c62828; margin-top: 0;">❌ Erro #6: Não Revisar Alucinações Normativas</h3>
+                
+                <div style="background: white; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                    <strong style="color: #d32f2f;">Exemplo do erro:</strong>
+                    <p style="font-style: italic; margin-top: 8px;">Aceitar e usar citações de leis, artigos, resoluções ou jurisprudências fornecidas pela IA sem verificação.</p>
+                </div>
+
+                <div style="background: #fff9c4; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #fbc02d;">
+                    <strong style="color: #f57f17;">📌 Por que é problemático:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li><strong>CRÍTICO:</strong> IA pode inventar números de leis, artigos inexistentes, resoluções falsas</li>
+                        <li>Uso de jurisprudência inventada é falta ética grave</li>
+                        <li>Pode configurar irregularidade administrativa</li>
+                        <li>Compromete credibilidade profissional e pode gerar responsabilização</li>
+                    </ul>
+                </div>
+
+                <div style="background: #e8f5e9; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #4caf50;">
+                    <strong style="color: #2e7d32;">✅ Como corrigir:</strong>
+                    <p style="margin-top: 10px;"><strong>SEMPRE verifique:</strong></p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>✓ Números de leis e artigos citados (consulte Planalto, repositórios oficiais)</li>
+                        <li>✓ Existência real de resoluções mencionadas (site dos tribunais)</li>
+                        <li>✓ Jurisprudência citada (busque no sistema do tribunal)</li>
+                        <li>✓ Redação de dispositivos legais (confronte com texto oficial)</li>
+                        <li>✓ Vigência das normas (se não foram revogadas)</li>
+                    </ul>
+                    <div style="background: #fff3cd; padding: 15px; margin-top: 15px; border-radius: 5px; border-left: 3px solid #ff9800;">
+                        <strong style="color: #e65100;">⚖️ Regra Profissional:</strong>
+                        <p style="margin-top: 8px; color: #e65100;">Use a IA como assistente de pesquisa, NUNCA como fonte primária de legislação ou jurisprudência. A responsabilidade técnica e ética é sempre sua!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 25px; margin: 20px 0; border-radius: 8px;">
+                <h3 style="color: #c62828; margin-top: 0;">❌ Erro #7: Copiar Resultado Sem Adaptar</h3>
+                
+                <div style="background: white; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                    <strong style="color: #d32f2f;">Exemplo do erro:</strong>
+                    <p style="font-style: italic; margin-top: 8px;">Copiar e colar documento ou parecer gerado pela IA diretamente no processo ou para a chefia, sem revisão ou personalização.</p>
+                </div>
+
+                <div style="background: #fff9c4; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #fbc02d;">
+                    <strong style="color: #f57f17;">📌 Por que é problemático:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Perde o toque profissional e expertise técnica pessoal</li>
+                        <li>Resultado genérico não reflete especificidades do caso</li>
+                        <li>Falta adequação ao contexto institucional (TRE-RN)</li>
+                        <li>Ausência de estratégia administrativa personalizada</li>
+                        <li>Pode conter informações incorretas ou desatualizadas</li>
+                    </ul>
+                </div>
+
+                <div style="background: #e8f5e9; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #4caf50;">
+                    <strong style="color: #2e7d32;">✅ Como corrigir:</strong>
+                    <p style="margin-top: 10px;"><strong>Processo de aproveitamento profissional:</strong></p>
+                    <div style="margin-top: 15px; padding-left: 10px;">
+                        <p style="margin: 10px 0;"><strong>1️⃣ Use IA como RASCUNHO INICIAL</strong></p>
+                        <p style="padding-left: 15px; color: #555;">Não como produto final, mas como base estrutural</p>
+                        
+                        <p style="margin: 10px 0; margin-top: 15px;"><strong>2️⃣ REVISE tecnicamente</strong></p>
+                        <p style="padding-left: 15px; color: #555;">Verifique fundamentação legal, pertinência dos argumentos, lógica administrativa</p>
+                        
+                        <p style="margin: 10px 0; margin-top: 15px;"><strong>3️⃣ PERSONALIZE ao caso</strong></p>
+                        <p style="padding-left: 15px; color: #555;">Adicione detalhes específicos, nuances factuais, documentos do processo</p>
+                        
+                        <p style="margin: 10px 0; margin-top: 15px;"><strong>4️⃣ ADAPTE ao contexto</strong></p>
+                        <p style="padding-left: 15px; color: #555;">Considere jurisprudência do TSE, peculiaridades do TRE-RN, orientações da Corregedoria</p>
+                        
+                        <p style="margin: 10px 0; margin-top: 15px;"><strong>5️⃣ AGREGUE estratégia</strong></p>
+                        <p style="padding-left: 15px; color: #555;">Inclua sua visão técnica, táticas administrativas, argumentação persuasiva</p>
+                        
+                        <p style="margin: 10px 0; margin-top: 15px;"><strong>6️⃣ REVISE novamente</strong></p>
+                        <p style="padding-left: 15px; color: #555;">Coerência, português administrativo, formatação, assinatura profissional</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reflection-box" style="margin-top: 40px; background: linear-gradient(135deg, #d32f2f, #c62828);">
+                <h3 style="color: white; border: none; padding: 0; margin-bottom: 15px;">⚠️ Princípio Fundamental</h3>
+                <p style="font-size: 1.2em; font-weight: 600;">A IA é ferramenta, não substituta</p>
+                <p style="margin-top: 15px;">Evitar esses 7 erros transforma a IA de "gerador de problemas" em "multiplicador de produtividade".</p>
+                <p style="margin-top: 15px; font-style: italic;">Sua expertise técnica + IA bem utilizada = Serviço público de excelência</p>
+            </div>
+        </div>
+
+
+        <div id="exercicios" class="content-section">
+            <h2><span class="emoji"></span> Exercícios Interativos: Pratique suas Habilidades</h2>
+            
+            <p style="margin-bottom: 30px;">Aprenda identificando problemas em <i>prompts</i> reais e construindo soluções. Clique em "Ver Análise" para conferir a resposta.</p>
+
+            <div class="workshop-step" style="background: #fff3cd; border-left-color: #ff9800;">
+                <h3 style="color: #e65100; margin-top: 0;">🎯 Exercício 1: Identifique os Problemas</h3>
+                
+                <div style="background: white; padding: 20px; margin: 15px 0; border-radius: 8px; border: 2px solid #ff9800;">
+                    <p><strong><i>Prompt</i> apresentado:</strong></p>
+                    <p style="font-style: italic; background: #f5f5f5; padding: 15px; border-radius: 5px; margin-top: 10px;">
+                        "Faça um parecer sobre licitação."
+                    </p>
+                </div>
+
+                <p style="margin: 15px 0; font-weight: 600; color: #e65100;">❓ Pergunta: Quais elementos da metodologia RCTS estão faltando?</p>
+
+                <details style="margin-top: 15px;">
+                    <summary style="cursor: pointer; font-weight: 600; color: #1e3c72; background: #e3f2fd; padding: 15px; border-radius: 8px; user-select: none;">
+                        👉 Clique para ver a análise completa
+                    </summary>
+                    <div style="margin-top: 15px; padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #2196f3;">
+                        <h4 style="color: #1565c0; margin-top: 0;">📊 Análise dos Problemas:</h4>
+                        
+                        <div style="background: #ffebee; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                            <p><strong>❌ R - ROLE (Papel): AUSENTE</strong></p>
+                            <p style="margin-top: 8px;">Não define qual perspectiva profissional a IA deve adotar (servidor de qual área?).</p>
+                        </div>
+
+                        <div style="background: #ffebee; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                            <p><strong>❌ C - CONTEXT (Contexto): AUSENTE</strong></p>
+                            <p style="margin-top: 8px;">Faltam informações essenciais:</p>
+                            <ul style="margin-top: 8px; padding-left: 20px;">
+                                <li>Qual processo licitatório?</li>
+                                <li>Qual o objeto da licitação?</li>
+                                <li>Quem são as partes?</li>
+                                <li>Quais os problemas identificados?</li>
+                                <li>Qual o valor envolvido?</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #ffebee; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                            <p><strong>❌ T - TASK (Tarefa): VAGA</strong></p>
+                            <p style="margin-top: 8px;">"Fazer um parecer" é muito genérico. Deveria especificar:</p>
+                            <ul style="margin-top: 8px; padding-left: 20px;">
+                                <li>Questões específicas a serem analisadas</li>
+                                <li>Pontos a serem fundamentados</li>
+                                <li>Fundamentos legais a utilizar</li>
+                                <li>Estrutura desejada</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #ffebee; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                            <p><strong>❌ E - STYLE (Estilo): AUSENTE</strong></p>
+                            <p style="margin-top: 8px;">Não especifica formato, tom, extensão ou público.</p>
+                        </div>
+
+                        <div style="background: #e8f5e9; padding: 20px; margin-top: 20px; border-radius: 8px; border-left: 4px solid #4caf50;">
+                            <h4 style="color: #2e7d32; margin-top: 0;">✅ Versão Corrigida:</h4>
+                            <p style="font-style: italic; background: white; padding: 15px; border-radius: 5px; margin-top: 10px; line-height: 1.8;">
+                                "Atue como servidor público especialista em licitações do TRE-RN <b>(ROLE)</b>. Elabore parecer técnico sobre Processo Licitatório nº 12345/2024 para aquisição de 50 impressoras laser. Valor estimado: R$ 150.000,00. Foram identificados indícios de especificação técnica direcionada para marca específica. Editais publicados em 10/03/2024. Fundamentação legal: Lei 14.133/2021 (art. 6º) e jurisprudência do TCU <b>(CONTEXT)</b>. O parecer deve: 1) analisar a legalidade das especificações técnicas, 2) identificar possíveis vícios de direcionamento, 3) fundamentar com jurisprudência do TCU, 4) recomendar medidas corretivas <b>(TASK)</b>. Formato: estrutura formal de parecer (relatório, análise, conclusão), linguagem técnico-administrativa, fundamentação robusta em jurisprudência, até 5 páginas <b>(STYLE)</b>."
+                            </p>
+                        </div>
+
+                        <div style="background: #e3f2fd; padding: 15px; margin-top: 15px; border-radius: 5px;">
+                            <p><strong>💡 Lição aprendida:</strong></p>
+                            <p style="margin-top: 8px;">Um <i>prompt</i> bem estruturado fornece TODOS os elementos para a IA gerar trabalho profissional, não apenas uma ideia vaga.</p>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="workshop-step" style="background: #e8f5e9; border-left-color: #4caf50; margin-top: 30px;">
+                <h3 style="color: #2e7d32; margin-top: 0;">🎯 Exercício 2: Qual Formato Usar?</h3>
+                
+                <div style="background: white; padding: 20px; margin: 15px 0; border-radius: 8px; border: 2px solid #4caf50;">
+                    <p><strong>Situação:</strong></p>
+                    <p style="margin-top: 10px;">Você precisa comparar as mudanças entre a antiga Lei de Licitações (Lei 8.666/93) e a Nova Lei de Licitações (Lei 14.133/21) no que se refere aos critérios de julgamento de propostas.</p>
+                </div>
+
+                <p style="margin: 15px 0; font-weight: 600; color: #2e7d32;">❓ Pergunta: Qual formato de saída seria mais adequado?</p>
+
+                <div style="background: white; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                    <label style="display: block; margin: 10px 0; cursor: pointer; padding: 10px; border: 2px solid #e0e0e0; border-radius: 5px;" onchange="checkAnswer(this, false)">
+                        <input type="radio" name="ex2" style="margin-right: 10px;">
+                        A) Texto corrido em parágrafos
+                    </label>
+                    <label style="display: block; margin: 10px 0; cursor: pointer; padding: 10px; border: 2px solid #e0e0e0; border-radius: 5px;" onchange="checkAnswer(this, false)">
+                        <input type="radio" name="ex2" style="margin-right: 10px;">
+                        B) Lista de tópicos com marcadores
+                    </label>
+                    <label style="display: block; margin: 10px 0; cursor: pointer; padding: 10px; border: 2px solid #e0e0e0; border-radius: 5px;" onchange="checkAnswer(this, true)">
+                        <input type="radio" name="ex2" style="margin-right: 10px;">
+                        C) Tabela comparativa com colunas
+                    </label>
+                    <label style="display: block; margin: 10px 0; cursor: pointer; padding: 10px; border: 2px solid #e0e0e0; border-radius: 5px;" onchange="checkAnswer(this, false)">
+                        <input type="radio" name="ex2" style="margin-right: 10px;">
+                        D) Formato de perguntas e respostas (Q&A)
+                    </label>
+                </div>
+
+                <details style="margin-top: 15px;">
+                    <summary style="cursor: pointer; font-weight: 600; color: #1e3c72; background: #e3f2fd; padding: 15px; border-radius: 8px; user-select: none;">
+                        👉 Clique para ver a justificativa
+                    </summary>
+                    <div style="margin-top: 15px; padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #4caf50;">
+                        <h4 style="color: #2e7d32; margin-top: 0;">✅ Resposta Correta: C) Tabela comparativa com colunas</h4>
+                        
+                        <p style="margin-top: 15px;"><strong>Por quê?</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.8;">
+                            <li>Permite visualização lado a lado das duas leis</li>
+                            <li>Facilita identificação rápida de diferenças e semelhanças</li>
+                            <li>Organiza informação de forma estruturada e consultável</li>
+                            <li>Ideal para análise comparativa de normas</li>
+                        </ul>
+
+                        <div style="background: #e8f5e9; padding: 15px; margin-top: 20px; border-radius: 5px;">
+                            <p><strong>📋 Exemplo de <i>prompt</i> ideal:</strong></p>
+                            <p style="font-style: italic; background: white; padding: 15px; border-radius: 5px; margin-top: 10px;">
+                                "Atue como especialista em Licitações Públicas <b>(ROLE)</b>. Compare os critérios de julgamento de propostas entre a Lei 8.666/93 e a Lei 14.133/21 <b>(CONTEXT)</b>. Identifique: critérios mantidos, critérios excluídos, critérios novos, e mudanças de aplicação <b>(TASK)</b>. Apresente em formato de tabela com 5 colunas: [Critério], [Lei 8.666/93], [Lei 14.133/21], [Mudança], [Impacto Prático]. Linguagem técnica objetiva, até 15 linhas <b>(STYLE)</b>."
+                            </p>
+                        </div>
+
+                        <div style="background: #fff3cd; padding: 15px; margin-top: 15px; border-radius: 5px; border-left: 3px solid #ff9800;">
+                            <p><strong>⚠️ Por que as outras opções não são ideais?</strong></p>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                <li><strong>A) Texto corrido:</strong> Dificulta comparação visual rápida</li>
+                                <li><strong>B) Tópicos:</strong> Não mostra relação direta entre as leis</li>
+                                <li><strong>D) Q&A:</strong> Melhor para dúvidas específicas, não para comparação sistemática</li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="workshop-step" style="background: #e3f2fd; border-left-color: #2196f3; margin-top: 30px;">
+                <h3 style="color: #1565c0; margin-top: 0;">🎯 Exercício 3: Complete o <i>Prompt</i></h3>
+                
+                <div style="background: white; padding: 20px; margin: 15px 0; border-radius: 8px; border: 2px solid #2196f3;">
+                    <p><strong>Situação:</strong></p>
+                    <p style="margin-top: 10px;">Você precisa elaborar um ofício para solicitar informações sobre andamento de processo eleitoral ao Cartório Eleitoral de Caicó.</p>
+                </div>
+
+                <p style="margin: 15px 0; font-weight: 600; color: #1565c0;">❓ Desafio: Complete o <i>prompt</i> abaixo preenchendo as lacunas com informações adequadas.</p>
+
+                <div style="background: white; padding: 20px; margin: 15px 0; border-radius: 8px; border: 1px solid #ccc;">
+                    <p style="font-family: 'Courier New', monospace; line-height: 2;">
+                        "Atue como <span style="background: #fff59d; padding: 2px 8px; border-radius: 3px;">_______________</span> <b>(ROLE)</b>. 
+                        Elabore ofício de solicitação de informações sobre <span style="background: #fff59d; padding: 2px 8px; border-radius: 3px;">_______________</span> para <span style="background: #fff59d; padding: 2px 8px; border-radius: 3px;">_______________</span> (destinatário). 
+                        Processo: <span style="background: #fff59d; padding: 2px 8px; border-radius: 3px;">_______________</span>. 
+                        Informações solicitadas: <span style="background: #fff59d; padding: 2px 8px; border-radius: 3px;">_______________</span>. 
+                        Prazo para resposta: <span style="background: #fff59d; padding: 2px 8px; border-radius: 3px;">_______________</span> <b>(CONTEXT)</b>. 
+                        O ofício deve: <span style="background: #fff59d; padding: 2px 8px; border-radius: 3px;">_______________</span> <b>(TASK)</b>. 
+                        Formato: <span style="background: #fff59d; padding: 2px 8px; border-radius: 3px;">_______________</span>, 
+                        tom: <span style="background: #fff59d; padding: 2px 8px; border-radius: 3px;">_______________</span>, 
+                        extensão: <span style="background: #fff59d; padding: 2px 8px; border-radius: 3px;">_______________</span> <b>(STYLE)</b>."
+                    </p>
+                </div>
+
+                <details style="margin-top: 15px;">
+                    <summary style="cursor: pointer; font-weight: 600; color: #1e3c72; background: #e3f2fd; padding: 15px; border-radius: 8px; user-select: none;">
+                        👉 Clique para ver exemplo de resposta completa
+                    </summary>
+                    <div style="margin-top: 15px; padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #4caf50;">
+                        <h4 style="color: #2e7d32; margin-top: 0;">✅ Exemplo de <i>Prompt</i> Completo:</h4>
+                        
+                        <p style="font-family: 'Courier New', monospace; background: #f5f5f5; padding: 20px; border-radius: 8px; line-height: 1.8; margin-top: 15px;">
+                            "Atue como <strong style="color: #d32f2f;">servidor público da Secretaria de Gestão de Processos do TRE-RN</strong> <b>(ROLE)</b>. 
+                            Elabore ofício de solicitação de informações sobre <strong style="color: #d32f2f;">andamento processual</strong> para <strong style="color: #d32f2f;">Cartório Eleitoral de Caicó/RN</strong> (destinatário). 
+                            Processo: <strong style="color: #d32f2f;">Administrativo nº 54321/2024 - Representação por propaganda eleitoral antecipada</strong>. 
+                            Informações solicitadas: <strong style="color: #d32f2f;">1) situação atual do processo, 2) previsão de conclusão, 3) necessidade de documentação complementar, 4) providências já adotadas</strong>. 
+                            Prazo para resposta: <strong style="color: #d32f2f;">10 dias úteis</strong> <b>(CONTEXT)</b>. 
+                            O ofício deve: <strong style="color: #d32f2f;">1) conter timbre do TRE-RN, 2) identificar claramente o processo, 3) listar as informações solicitadas de forma objetiva, 4) fundamentar na necessidade de controle processual, 5) estabelecer prazo para resposta</strong> <b>(TASK)</b>. 
+                            Formato: <strong style="color: #d32f2f;">ofício padrão com numeração, destinatário, referência, texto, fecho, data e assinatura</strong>, 
+                            tom: <strong style="color: #d32f2f;">formal mas cordial, técnico-administrativo</strong>, 
+                            extensão: <strong style="color: #d32f2f;">máximo 1 página</strong> <b>(STYLE)</b>."
+                        </p>
+
+                        <div style="background: #e3f2fd; padding: 15px; margin-top: 20px; border-radius: 5px;">
+                            <p><strong>💡 Pontos-chave desta resposta:</strong></p>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                <li><strong>ROLE:</strong> Especialidade adequada (Gestão de Processos)</li>
+                                <li><strong>CONTEXT:</strong> Todos os dados necessários (processo, informações, prazo)</li>
+                                <li><strong>TASK:</strong> 5 ações claras e sequenciais</li>
+                                <li><strong>STYLE:</strong> Formato, tom e extensão bem definidos</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #fff3cd; padding: 15px; margin-top: 15px; border-radius: 5px; border-left: 3px solid #ff9800;">
+                            <p><strong>⚠️ Observação importante:</strong></p>
+                            <p style="margin-top: 8px;">Mesmo com <i>prompt</i> completo, você ainda precisa revisar e adaptar o ofício gerado, incluindo dados reais do timbre, ajustando detalhes e verificando a fundamentação!</p>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="workshop-step" style="background: #f3e5f5; border-left-color: #9c27b0; margin-top: 30px;">
+                <h3 style="color: #6a1b9a; margin-top: 0;">🎯 Exercício 4: Identifique o Erro Fatal</h3>
+                
+                <div style="background: white; padding: 20px; margin: 15px 0; border-radius: 8px; border: 2px solid #9c27b0;">
+                    <p><strong>Cenário:</strong></p>
+                    <p style="margin-top: 10px;">Um servidor gerou um parecer usando IA e incluiu a seguinte fundamentação:</p>
+                    <p style="font-style: italic; background: #ffebee; padding: 15px; border-radius: 5px; margin-top: 10px; border-left: 3px solid #f44336;">
+                        "Conforme entendimento consolidado na Súmula 789 do TSE, 'é vedada a propaganda eleitoral em redes sociais nos 3 dias anteriores à eleição'. Ainda, o REsp 9.876.543/RN (2023) do TSE reforçou esse posicionamento."
+                    </p>
+                </div>
+
+                <p style="margin: 15px 0; font-weight: 600; color: #6a1b9a;">❓ Pergunta: Qual é o erro FATAL que o servidor cometeu?</p>
+
+                <details style="margin-top: 15px;">
+                    <summary style="cursor: pointer; font-weight: 600; color: #1e3c72; background: #e3f2fd; padding: 15px; border-radius: 8px; user-select: none;">
+                        👉 Clique para ver a resposta
+                    </summary>
+                    <div style="margin-top: 15px; padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #f44336;">
+                        <h4 style="color: #c62828; margin-top: 0;">🚨 ERRO GRAVÍSSIMO: Alucinação Normativa Não Verificada</h4>
+                        
+                        <div style="background: #ffebee; padding: 20px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #d32f2f;">
+                            <p><strong style="color: #c62828;">❌ Problemas identificados:</strong></p>
+                            <ul style="margin-top: 15px; padding-left: 20px; line-height: 1.8;">
+                                <li><strong>Súmula 789 do TSE NÃO EXISTE</strong> (a IA inventou)</li>
+                                <li><strong>REsp 9.876.543/RN NÃO EXISTE</strong> (número de processo fictício)</li>
+                                <li><strong>O conteúdo da "súmula" pode estar incorreto</strong> juridicamente</li>
+                                <li><strong>Uso em documento oficial configura irregularidade administrativa</strong></li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #fff3cd; padding: 20px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #ff9800;">
+                            <p><strong style="color: #e65100;">⚖️ Consequências:</strong></p>
+                            <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.8;">
+                                <li>Responsabilização por informação falsa em documento oficial</li>
+                                <li>Comprometimento da decisão baseada em fundamentação incorreta</li>
+                                <li>Perda total de credibilidade profissional</li>
+                                <li>Possível processo administrativo disciplinar</li>
+                                <li>Prejuízo à imagem institucional do TRE-RN</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #e8f5e9; padding: 20px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #4caf50;">
+                            <p><strong style="color: #2e7d32;">✅ Como deveria ter agido:</strong></p>
+                            <ol style="margin-top: 10px; padding-left: 20px; line-height: 1.8;">
+                                <li><strong>SEMPRE verificar</strong> se a súmula existe (consultar site do TSE)</li>
+                                <li><strong>SEMPRE buscar o REsp</strong> no sistema do tribunal (confirmar número, ano, conteúdo)</li>
+                                <li><strong>NUNCA confiar cegamente</strong> em citações fornecidas por IA</li>
+                                <li><strong>Usar IA para rascunho</strong>, mas fazer pesquisa jurisprudencial independente</li>
+                                <li><strong>Validar TODA fundamentação legal</strong> antes de incluir em documentos</li>
+                            </ol>
+                        </div>
+
+                        <div style="background: linear-gradient(135deg, #c62828, #b71c1c); color: white; padding: 25px; margin-top: 20px; border-radius: 10px; text-align: center;">
+                            <p style="font-size: 1.3em; font-weight: 700; margin-bottom: 15px;">⚠️ REGRA DE OURO</p>
+                            <p style="font-size: 1.1em; line-height: 1.6;">
+                                NUNCA, em hipótese alguma, use citação de lei, súmula, jurisprudência ou norma fornecida por IA sem verificar sua existência e exatidão em fontes oficiais.
+                            </p>
+                            <p style="margin-top: 15px; font-style: italic; opacity: 0.95;">
+                                A responsabilidade profissional e institucional é SEMPRE sua, não da IA!
+                            </p>
+                        </div>
+
+                        <div style="background: #e3f2fd; padding: 15px; margin-top: 20px; border-radius: 5px;">
+                            <p><strong>📚 Fontes oficiais para verificação:</strong></p>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                <li>Súmulas: site oficial do TSE, STF, STJ, etc.</li>
+                                <li>Jurisprudência: sistemas de busca dos tribunais</li>
+                                <li>Legislação: Planalto, Senado, repositórios oficiais</li>
+                                <li>Resoluções: site do TSE e TRE-RN</li>
+                            </ul>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="workshop-step" style="background: #fce4ec; border-left-color: #e91e63; margin-top: 30px;">
+                <h3 style="color: #880e4f; margin-top: 0;">🎯 Exercício 5: Melhore Este <i>Prompt</i></h3>
+                
+                <div style="background: white; padding: 20px; margin: 15px 0; border-radius: 8px; border: 2px solid #e91e63;">
+                    <p><strong><i>Prompt</i> Original (ruim):</strong></p>
+                    <p style="font-style: italic; background: #ffebee; padding: 15px; border-radius: 5px; margin-top: 10px; border-left: 3px solid #f44336;">
+                        "Analise este processo e me diga se está tudo certo ou se tem problema."
+                    </p>
+                </div>
+
+                <p style="margin: 15px 0; font-weight: 600; color: #880e4f;">❓ Desafio: Reescreva este <i>prompt</i> aplicando corretamente a metodologia RCTS.</p>
+
+                <div style="background: #fff9c4; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 3px solid #fbc02d;">
+                    <p><strong>💡 Dicas para melhorar:</strong></p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Defina qual tipo de especialista a IA deve ser</li>
+                        <li>Especifique que tipo de processo é</li>
+                        <li>Indique o que procurar (vícios processuais, irregularidades, riscos?)</li>
+                        <li>Determine formato de resposta desejado</li>
+                        <li>Adicione contexto: número do processo, partes envolvidas, objetivo da análise</li>
+                    </ul>
+                </div>
+
+                <details style="margin-top: 15px;">
+                    <summary style="cursor: pointer; font-weight: 600; color: #1e3c72; background: #e3f2fd; padding: 15px; border-radius: 8px; user-select: none;">
+                        👉 Clique para ver exemplo de versão melhorada
+                    </summary>
+                    <div style="margin-top: 15px; padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #4caf50;">
+                        <h4 style="color: #2e7d32; margin-top: 0;">✅ Versão Otimizada com RCTS:</h4>
+                        
+                        <div style="background: #e8f5e9; padding: 20px; margin: 15px 0; border-radius: 8px;">
+                            <p style="font-family: 'Courier New', monospace; line-height: 1.9;">
+                                "Atue como servidor público especialista em Processo Administrativo Disciplinar do TRE-RN <strong>(ROLE)</strong>. 
+                                Analise o Processo Administrativo Disciplinar nº 98765/2024 anexo, instaurado contra o servidor Maria Santos (matrícula 54321) por suposta irregularidade na condução de processo eleitoral em 2022. 
+                                Alegações: favorecimento de candidato específico, violação de sigilo funcional. 
+                                Minha chefia está preocupada com possíveis vícios processuais que possam levar à anulação <strong>(CONTEXT)</strong>. 
+                                Realize análise completa identificando: 1) vícios processuais formais, 2) riscos jurídicos de anulação, 3) omissões na instrução probatória, 4) violações ao devido processo legal, 5) pontos que necessitam regularização urgente <strong>(TASK)</strong>. 
+                                Apresente em formato de tabela com 5 colunas: [Vício/Problema], [Dispositivo Processual], [Problema/Risco Identificado], [Fundamento Legal], [Grau de Risco: Alto/Médio/Baixo]. 
+                                Após a tabela, inclua parecer conclusivo em até 3 parágrafos com recomendações objetivas. 
+                                Linguagem técnico-administrativa para apresentação à Corregedoria <strong>(STYLE)</strong>."
+                            </p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; margin-top: 20px; border-radius: 8px; border: 1px solid #e0e0e0;">
+                            <h4 style="color: #1e3c72; margin-top: 0;">📊 Comparação: Antes × Depois</h4>
+                            
+                            <table style="margin-top: 15px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%;">Elemento</th>
+                                        <th style="width: 35%;">Versão Original (Ruim)</th>
+                                        <th style="width: 40%;">Versão Otimizada (Boa)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>R - Role</strong></td>
+                                        <td style="background: #ffebee;">❌ Ausente</td>
+                                        <td style="background: #e8f5e9;">✅ Servidor especialista em Processo Administrativo Disciplinar</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>C - Context</strong></td>
+                                        <td style="background: #ffebee;">❌ "Este processo" (vago)</td>
+                                        <td style="background: #e8f5e9;">✅ Número, servidor, alegações, preocupações específicas</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>T - Task</strong></td>
+                                        <td style="background: #ffebee;">❌ "Diga se está certo ou tem problema"</td>
+                                        <td style="background: #e8f5e9;">✅ 5 ações específicas e claras</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>E - Style</strong></td>
+                                        <td style="background: #ffebee;">❌ Ausente</td>
+                                        <td style="background: #e8f5e9;">✅ Tabela + parecer, linguagem definida, destinatário especificado</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="background: #e3f2fd; padding: 15px; margin-top: 20px; border-radius: 5px;">
+                            <p><strong>🎯 Resultado Esperado:</strong></p>
+                            <p style="margin-top: 10px;">Com o <i>prompt</i> otimizado, você receberá análise estruturada, profissional, com fundamentação adequada e pronta para revisão final - não apenas uma resposta genérica como "parece OK" ou "tem alguns problemas".</p>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="reflection-box" style="margin-top: 40px;">
+                <h3 style="color: white; border: none; padding: 0; margin-bottom: 15px;">🎓 Conclusão dos Exercícios</h3>
+                <p style="font-size: 1.1em;">A prática leva à perfeição. Quanto mais você aplicar a metodologia RCTS, mais natural se tornará.</p>
+                <p style="margin-top: 15px; font-style: italic;">Lembre-se: <i>prompts</i> bem construídos economizam tempo, geram melhores resultados e reduzem retrabalho!</p>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 30px; margin-top: 30px; border-radius: 15px; text-align: center;">
+                <h3 style="color: white; margin-bottom: 20px;">💪 Desafio Final</h3>
+                <p style="font-size: 1.1em; line-height: 1.7;">
+                    Nos próximos 7 dias, pratique criar pelo menos um <i>prompt</i> RCTS completo por dia para suas tarefas reais no TRE-RN.
+                </p>
+                <p style="margin-top: 15px; opacity: 0.95;">
+                    Documente seus <i>prompts</i> e os resultados obtidos - você ficará surpreso com a evolução!
+                </p>
+            </div>
+        </div>
+
+
+        <footer style="text-align: center; padding: 40px 20px; color: white; background: rgba(0,0,0,0.35); margin-top: 50px; border-top: 2px solid rgba(255,255,255,0.15);">
+            <p style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
+                © 2025 - Workshop - IA na prática aplicada ao TRE/RN
+            </p>
+            <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.9;">
+                Material didático para uso educacional
+            </p>
+            
+            <!-- Divisória discreta -->
+            <div style="width: 60px; height: 1px; background: rgba(255,255,255,0.3); margin: 25px auto;"></div>
+            
+            <!-- Créditos do desenvolvedor -->
+            <p style="font-size: 0.8em; margin-top: 8px;">
+                <a href="mailto:osmar.fernandes@tre-rn.jus.br" style="color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.3s ease;">
+                    osmar.fernandes@tre-rn.jus.br
+                </a>
+            </p>
+        </footer>
+
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            const buttons = document.querySelectorAll('.nav-btn');
+            
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+            
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const sections = ['fundamentos', 'clareza', 'rcts', 'exemplos', 'oficina', 'comparativo', 'templates', 'erros'];
+            const activeSection = document.querySelector('.content-section.active');
+            const currentIndex = sections.indexOf(activeSection.id);
+            const progress = ((currentIndex + 1) / sections.length) * 100;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        window.addEventListener('load', updateProgressBar);
+
+        document.addEventListener('keydown', function(e) {
+            const sections = ['fundamentos', 'rcts', 'exemplos', 'oficina', 'comparativo', 'templates', 'erros', 'exercicios'];
+            const activeSection = document.querySelector('.content-section.active');
+            const currentIndex = sections.indexOf(activeSection.id);
+            
+            if (e.key === 'ArrowRight' && currentIndex < sections.length - 1) {
+                const nextButton = document.querySelectorAll('.nav-btn')[currentIndex + 1];
+                nextButton.click();
+            } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                const prevButton = document.querySelectorAll('.nav-btn')[currentIndex - 1];
+                prevButton.click();
+            }
+        });
+
+
+        function copyTemplate(button) {
+            const templateDiv = button.previousElementSibling;
+            const template = templateDiv.textContent.trim();
+            
+            navigator.clipboard.writeText(template).then(() => {
+                const originalText = button.innerHTML;
+                const originalBg = button.style.background;
+                
+                button.innerHTML = '✅ Copiado!';
+                button.style.background = '#4caf50';
+                button.style.color = 'white';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = originalBg;
+                }, 2000);
+            }).catch(err => {
+                alert('Erro ao copiar. Por favor, selecione e copie manualmente.');
+                console.error('Erro ao copiar:', err);
+            });
+        }
+
+        function checkAnswer(element, isCorrect) {
+            // Remove estilos anteriores
+            const allLabels = element.parentElement.querySelectorAll('label');
+            allLabels.forEach(label => {
+                label.style.border = '2px solid #e0e0e0';
+                label.style.background = 'white';
+            });
+            
+            // Aplica estilo baseado na resposta
+            if (isCorrect) {
+                element.style.border = '2px solid #4caf50';
+                element.style.background = '#e8f5e9';
+                
+                // Mostra feedback positivo temporário
+                const feedback = document.createElement('div');
+                feedback.innerHTML = '✅ Correto!';
+                feedback.style.cssText = 'color: #2e7d32; font-weight: 600; margin-top: 10px; animation: fadeIn 0.5s;';
+                
+                // Remove feedback anterior se existir
+                const oldFeedback = element.parentElement.querySelector('.answer-feedback');
+                if (oldFeedback) oldFeedback.remove();
+                
+                feedback.className = 'answer-feedback';
+                element.parentElement.appendChild(feedback);
+            } else {
+                element.style.border = '2px solid #f44336';
+                element.style.background = '#ffebee';
+                
+                // Mostra feedback negativo temporário
+                const feedback = document.createElement('div');
+                feedback.innerHTML = '❌ Tente novamente. Veja a justificativa abaixo.';
+                feedback.style.cssText = 'color: #c62828; font-weight: 600; margin-top: 10px; animation: fadeIn 0.5s;';
+                
+                // Remove feedback anterior se existir
+                const oldFeedback = element.parentElement.querySelector('.answer-feedback');
+                if (oldFeedback) oldFeedback.remove();
+                
+                feedback.className = 'answer-feedback';
+                element.parentElement.appendChild(feedback);
+            }
+        }
+
+        // Função para copiar templates
+        function copyTemplate(button) {
+            const templateDiv = button.previousElementSibling;
+            const template = templateDiv.textContent.trim();
+            
+            navigator.clipboard.writeText(template).then(() => {
+                const originalText = button.innerHTML;
+                const originalBg = button.style.background;
+                
+                button.innerHTML = '✅ Copiado!';
+                button.style.background = '#4caf50';
+                button.style.color = 'white';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = originalBg;
+                }, 2000);
+            }).catch(err => {
+                alert('Erro ao copiar. Por favor, selecione e copie manualmente.');
+                console.error('Erro ao copiar:', err);
+            });
+        }
+
+        // Função para validar respostas dos exercícios
+        function checkAnswer(element, isCorrect) {
+            // Remove estilos anteriores
+            const allLabels = element.parentElement.querySelectorAll('label');
+            allLabels.forEach(label => {
+                label.style.border = '2px solid #e0e0e0';
+                label.style.background = 'white';
+            });
+            
+            // Aplica estilo baseado na resposta
+            if (isCorrect) {
+                element.style.border = '2px solid #4caf50';
+                element.style.background = '#e8f5e9';
+                
+                // Mostra feedback positivo temporário
+                const feedback = document.createElement('div');
+                feedback.innerHTML = '✅ Correto!';
+                feedback.style.cssText = 'color: #2e7d32; font-weight: 600; margin-top: 10px; animation: fadeIn 0.5s;';
+                
+                // Remove feedback anterior se existir
+                const oldFeedback = element.parentElement.querySelector('.answer-feedback');
+                if (oldFeedback) oldFeedback.remove();
+                
+                feedback.className = 'answer-feedback';
+                element.parentElement.appendChild(feedback);
+            } else {
+                element.style.border = '2px solid #f44336';
+                element.style.background = '#ffebee';
+                
+                // Mostra feedback negativo temporário
+                const feedback = document.createElement('div');
+                feedback.innerHTML = '❌ Tente novamente. Veja a justificativa abaixo.';
+                feedback.style.cssText = 'color: #c62828; font-weight: 600; margin-top: 10px; animation: fadeIn 0.5s;';
+                
+                // Remove feedback anterior se existir
+                const oldFeedback = element.parentElement.querySelector('.answer-feedback');
+                if (oldFeedback) oldFeedback.remove();
+                
+                feedback.className = 'answer-feedback';
+                element.parentElement.appendChild(feedback);
+            }
+        }
+    </script>
+</body>
+</html>

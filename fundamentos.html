@@ -1,0 +1,3041 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop - IA na prática aplicada ao TRE/RN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e3a5f;
+            --secondary: #2c5f8d;
+            --accent: #d4af37;
+            --light: #f8f9fa;
+            --dark: #1a1a2e;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Animação de flutuação para o ícone */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Efeito hover nos badges do header */
+        header [style*="backdrop-filter"] > div:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+            transition: all 0.3s ease;
+        }
+
+        /* Efeito de brilho animado no header */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 3s infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animação de pulso suave nos badges */
+        @keyframes pulse-soft {
+            0%, 100% {
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        header [style*="backdrop-filter"] > div {
+            animation: pulse-soft 3s ease-in-out infinite;
+        }
+
+        /* Responsividade aprimorada do header */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2em !important;
+            }
+            
+            header h3 {
+                font-size: 1.2em !important;
+            }
+            
+            header [style*="width: 110px"] {
+                width: 90px !important;
+                height: 90px !important;
+            }
+            
+            header [style*="width: 110px"] span {
+                font-size: 3em !important;
+            }
+            
+            header > div[style*="position: absolute"] {
+                opacity: 0.5;
+            }
+            
+            header [style*="gap: 20px"] {
+                gap: 12px !important;
+            }
+            
+            header [style*="gap: 20px"] > div {
+                padding: 10px 20px !important;
+                font-size: 0.95em !important;
+            }
+            
+            header [style*="gap: 20px"] > div span:first-child {
+                font-size: 1.2em !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8em !important;
+                margin-bottom: 12px !important;
+            }
+            
+            header h3 {
+                font-size: 1em !important;
+            }
+            
+            header [style*="backdrop-filter"] {
+                padding: 14px 28px !important;
+            }
+            
+            header [style*="gap: 20px"] {
+                flex-direction: column;
+                gap: 10px !important;
+            }
+            
+            header [style*="gap: 20px"] > div {
+                width: 90%;
+                justify-content: center;
+                padding: 10px 16px !important;
+            }
+
+            header .header-content {
+                padding: 30px 15px !important;
+            }
+        }
+
+        /* Efeito de parallax suave nos círculos de fundo */
+        @keyframes float-bg {
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(20px, -20px);
+            }
+        }
+
+        header > div[style*="position: absolute"]:nth-child(1) {
+            animation: float-bg 8s ease-in-out infinite;
+        }
+
+        header > div[style*="position: absolute"]:nth-child(2) {
+            animation: float-bg 10s ease-in-out infinite reverse;
+        }
+
+        header > div[style*="position: absolute"]:nth-child(3) {
+            animation: float-bg 12s ease-in-out infinite;
+        }
+
+        header > div[style*="position: absolute"]:nth-child(4) {
+            animation: float-bg 9s ease-in-out infinite reverse;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: var(--secondary);
+            font-size: 1.3em;
+            font-weight: 300;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0; /* MUDAR de 130px para 0 */
+            z-index: 999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        } 
+
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+
+        .nav-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--accent) 0%, #f0c674 100%);
+            color: var(--dark);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+            font-weight: 700;
+        }
+
+        .nav-btn.active:hover {
+            background: linear-gradient(135deg, #f0c674 0%, var(--accent) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }       
+
+        .content-wrapper {
+            background: white;
+            margin: 30px auto;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2em;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        h3 {
+            color: var(--secondary);
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+        }
+
+        h4 {
+            color: var(--primary);
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+            border-left: 5px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 30px;
+            margin: 25px 0;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border: none;
+            border-left: 6px solid var(--accent);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(30, 58, 95, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+            border-left-color: var(--primary);
+        }
+
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+            position: relative;
+        }
+
+        .tool-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.4s;
+        }
+
+        .tool-card:hover .tool-header::after {
+            width: 120px;
+        }
+
+        .tool-name {
+            font-size: 1.8em;
+            color: var(--primary);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .tool-name::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 40px;
+            background: linear-gradient(180deg, var(--accent) 0%, var(--primary) 100%);
+            border-radius: 4px;
+        }
+
+        .tool-price {
+            background: linear-gradient(135deg, var(--accent) 0%, #f0c674 100%);
+            color: var(--dark);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tool-price:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .tool-card h4 {
+            color: var(--primary);
+            font-size: 1.25em;
+            margin: 25px 0 12px 0;
+            padding-left: 15px;
+            border-left: 3px solid var(--accent);
+            font-weight: 700;
+        }
+
+        .tool-card ul {
+            margin: 15px 0 15px 20px;
+            list-style: none;
+        }
+
+        .tool-card ul li {
+            margin: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .tool-card ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .tool-card p {
+            line-height: 1.7;
+            color: #555;
+        }
+
+        /* Ícone grande no topo de cada ferramenta */
+        .tool-icon {
+            font-size: 3.5em;
+            display: inline-block;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+            animation: bounce-soft 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce-soft {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Badge de destaque */
+        .tool-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Seção de características */
+        .tool-features {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .tool-features h4 {
+            margin-top: 0;
+            border-left: none;
+            padding-left: 0;
+        }    
+
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid var(--warning);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .danger {
+            background: #f8d7da;
+            border-left: 5px solid var(--danger);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 5px solid var(--success);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .glossary-term {
+            background: #e9ecef;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .term-title {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .faq-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 0;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .faq-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: linear-gradient(180deg, var(--accent) 0%, var(--primary) 100%);
+            transform: scaleY(0);
+            transition: transform 0.4s ease;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .faq-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .faq-item.open {
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .faq-item.open::before {
+            transform: scaleY(1);
+        }
+
+        .faq-question {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.15em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            gap: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 0;
+            background: var(--accent);
+            transition: height 0.3s ease;
+        }
+
+        .faq-item.open .faq-question::before {
+            height: 60%;
+        }
+
+        .faq-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--accent) 0%, #f0c674 100%);
+            color: var(--dark);
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 0.9em;
+            margin-right: 15px;
+            box-shadow: 0 3px 10px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover .faq-number {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .faq-answer {
+            margin: 0;
+            color: #555;
+            display: none;
+            padding: 0 30px 25px 30px;
+            border-top: none;
+            line-height: 1.8;
+            animation: fadeInAnswer 0.5s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        @keyframes fadeInAnswer {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .faq-answer p {
+            margin: 12px 0;
+        }
+
+        .faq-answer ul {
+            margin: 15px 0 15px 25px;
+            list-style: none;
+        }
+
+        .faq-answer ul li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .faq-answer ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .faq-answer strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .icon {
+            font-size: 1.4em;
+            transition: transform 0.4s ease;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .faq-item.open .icon {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+
+        /* Badge de categoria no FAQ */
+        .faq-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .grid-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        strong {
+            color: var(--primary);
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Responsividade FAQ */
+        @media (max-width: 768px) {
+            .faq-question {
+                font-size: 1em;
+                padding: 20px;
+            }
+            
+            .faq-number {
+                min-width: 30px;
+                height: 30px;
+                font-size: 0.85em;
+            }
+            
+            .faq-answer {
+                padding: 0 20px 20px 20px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+            
+            .nav-content {
+                gap: 8px;
+            }
+        }
+
+
+        @media (max-width: 480px) {
+            .nav-btn {
+                padding: 8px 16px;
+                font-size: 0.85em;
+                width: auto;
+                flex: 0 1 auto;
+            }
+            
+            .nav-content {
+                gap: 6px;
+                padding: 0 10px;
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: var(--accent);
+            z-index: 10000;
+            transition: width 0.3s;
+        }
+
+        @keyframes pulse-warning {
+            0%, 100% {
+                box-shadow: 0 3px 10px rgba(239, 68, 68, 0.3);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 5px 20px rgba(239, 68, 68, 0.6);
+                transform: scale(1.05);
+            }
+        }
+        /* Cards de LLMs */
+        .llm-card {
+            background: white;
+            border-radius: 12px;
+            margin: 15px 0;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .llm-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .llm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .llm-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .llm-icon {
+            font-size: 2.5em;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .llm-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .llm-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-multimodal {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            color: white;
+        }
+
+        .badge-proprietary {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            color: white;
+        }
+
+        .badge-opensource {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .badge-recommended {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            animation: pulse-soft 2s ease-in-out infinite;
+        }
+
+        .badge-fast {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+        }
+
+        .badge-context {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .llm-toggle {
+            font-size: 1.2em;
+            color: var(--accent);
+            transition: transform 0.3s ease;
+            margin-left: auto;
+        }
+
+        .llm-card.open .llm-toggle {
+            transform: rotate(180deg);
+        }
+
+        .llm-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 25px;
+        }
+
+        .llm-card.open .llm-details {
+            max-height: 500px;
+            padding: 20px 25px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .llm-specs {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .llm-spec-item {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            align-items: center;
+        }
+
+        .spec-label {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.95em;
+        }
+
+        .spec-value {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .highlight-context {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .llm-use-case {
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+            margin-top: 15px;
+        }
+
+        .llm-warning {
+            background: #fef3c7;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+            margin-top: 12px;
+            font-size: 0.9em;
+            color: #92400e;
+        }
+
+        /* Responsividade dos cards LLM */
+        @media (max-width: 768px) {
+            .llm-spec-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .spec-label {
+                font-size: 0.9em;
+            }
+            
+            .llm-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .llm-badges {
+                width: 100%;
+            }
+            
+            .llm-toggle {
+                position: absolute;
+                right: 25px;
+                top: 25px;
+            }
+        }
+
+        footer a:hover {
+            color: var(--accent) !important;
+            text-decoration: underline !important;
+            opacity: 1 !important;
+        }
+
+        footer a {
+            position: relative;
+            display: inline-block;
+        }
+
+        footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        footer a:hover::after {
+            width: 100%;
+        }        
+
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <header style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden;">
+        <!-- Elementos decorativos de fundo -->
+        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; z-index: 0;"></div>
+        <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255, 255, 255, 0.08); border-radius: 50%; z-index: 0;"></div>
+        <div style="position: absolute; top: 50%; right: 20%; width: 250px; height: 250px; background: rgba(118, 75, 162, 0.15); border-radius: 50%; z-index: 0;"></div>
+        <div style="position: absolute; bottom: 20%; left: 15%; width: 180px; height: 180px; background: rgba(102, 126, 234, 0.12); border-radius: 50%; z-index: 0;"></div>
+        
+        <!-- Padrão de linhas diagonais -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,0.03) 35px, rgba(255,255,255,0.03) 70px); z-index: 0;"></div>
+        
+        <div class="header-content" style="position: relative; z-index: 1; padding: 40px 20px;">
+            <!-- Ícone principal animado -->
+            <div style="display: inline-block; margin-bottom: 25px; animation: float 3s ease-in-out infinite;">
+                <div style="background: rgba(255, 255, 255, 0.2); width: 110px; height: 110px; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); border: 3px solid rgba(255, 255, 255, 0.3); box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);">
+                    <span style="font-size: 4em;">⚖️</span>
+                </div>
+            </div>
+            
+            <h1 style="color: white; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); margin-bottom: 15px; font-size: 3em; font-weight: 800; letter-spacing: -0.5px;">
+                Workshop - IA na prática aplicada ao TRE/RN
+            </h1>
+            
+            <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); display: inline-block; padding: 18px 40px; border-radius: 50px; margin-bottom: 30px; border: 2px solid rgba(255, 255, 255, 0.25); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);">
+                <h3 style="color: white; margin: 0; font-size: 1.5em; font-weight: 600; text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);">
+                    Introdução e Fundamentos
+                </h3>
+            </div>
+            
+            
+            
+            
+        </div>
+    </header>    
+
+    <nav>
+        <div class="nav-content">
+            <button class="nav-btn active" onclick="showSection('intro')">Introdução</button>
+            <button class="nav-btn" onclick="showSection('ferramentas')">Ferramentas</button>
+            <button class="nav-btn" onclick="showSection('etica')">Regulamentação</button>
+            <button class="nav-btn" onclick="showSection('glossario')">Glossário</button>
+            <button class="nav-btn" onclick="showSection('faq')">FAQ</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <!-- SEÇÃO INTRODUÇÃO -->
+            <section id="intro" class="active">
+                
+                <h2>1. Conceitos Essenciais de IA</h2> <h3>
+                ✴️ O que é Inteligência Artificial?</h3>
+                <div class="card">    
+                    <p>Campo da tecnologia que busca criar sistemas capazes de realizar tarefas que normalmente exigiriam raciocínio humano, como:</p>
+                    <ul>
+                        <li>Interpretar informações</li>
+                        <li>Aprender com dados e tomar decisões</li>
+                        <li>Adaptar-se a novas situações</li>
+                    </ul>
+                    <p>Na prática, a IA não é “inteligente” no sentido humano: ela identifica padrões, cruza informações e gera respostas com base em enormes volumes de dados e modelos matemáticos.</p>
+                </div>
+
+                <h3>✴️ Ferramentas de LLM <i>(Linguagem de Grande Porte)</i></h3>
+                <div class="card">
+                    <p>Ambientes que possibilitam a interação do usuário com a IA de forma simples e funcional. As ferramentas de LLM são ambientes completos, com diversas funcionalidades.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ferramenta</th>
+                                <th>Empresa</th>
+                                <th>Melhor Para</th>
+                                <th>Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>ChatGPT</strong></td>
+                                <td>OpenAI</td>
+                                <td>Redação de documentos, brainstorming</td>
+                                <td><a href="https://chatgpt.com/" target="_blank">https://chatgpt.com/</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Claude</strong></td>
+                                <td>Anthropic</td>
+                                <td>Análise de documentos longos</td>
+                                <td><a href="https://claude.ai/" target="_blank">https://claude.ai/</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gemini</strong></td>
+                                <td>Google</td>
+                                <td>Pesquisa atualizada, documentos gigantes</td>
+                                <td><a href="https://gemini.google.com/" target="_blank">https://gemini.google.com/</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Perplexity</strong></td>
+                                <td>Perplexity AI</td>
+                                <td>Pesquisa administrativa com fontes</td>
+                                <td><a href="https://www.perplexity.ai/" target="_blank">https://www.perplexity.ai/</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>NotebookLM</strong></td>
+                                <td>Google</td>
+                                <td>Análise de múltiplos documentos</td>
+                                <td><a href="https://notebooklm.google.com/" target="_blank">https://notebooklm.google.com/</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Copilot</strong></td>
+                                <td>Microsof</td>
+                                <td>Melhoria da produtividade geral no trabalho</td>
+                                <td><a href="https://copilot.microsoft.com/" target="_blank">https://copilot.microsoft.com/</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Grok</strong></td>
+                                <td>xAI</td>
+                                <td>Respostas rápidas e atualizadas em tempo real</td>
+                                <td><a href="https://chat.deepseek.com/" target="_blank">https://chat.deepseek.com/</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>DeepSeek</strong></td>
+                                <td>DeepSeek</td>
+                                <td>Experimentação sem custo</td>
+                                <td><a href="https://chat.deepseek.com/" target="_blank">https://chat.deepseek.com/</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Qwen</strong></td>
+                                <td>Alibaba Cloud</td>
+                                <td>Alternativa gratuita</td>
+                                <td><a href="https://chat.qwen.ai/" target="_blank">https://chat.qwen.ai/</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <h3>✴️ Modelos de LLM</h3>
+                <div class="card">
+                    <p>É o <strong>núcleo da ferramenta</strong>, ou seja, o sistema matemático que realmente processa a linguagem, reconhece padrões e gera respostas. Ele é treinado com grandes volumes de dados e ajustado continuamente para aprimorar sua precisão.</p>
+                    <br>
+                    <p>Cada <strong>ferramenta</strong> pode utilizar um ou mais <strong>modelos</strong>:</p>
+
+                    <table>
+                      <thead>
+                        <tr>
+                          <th style="width: 20%;">Ferramenta</th>
+                          <th style="width: 30%;">Modelos</th>
+                          <th style="width: 50%;">Descrição</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        <!-- ChatGPT -->
+                        <tr>
+                          <td rowspan="4">ChatGPT</td>
+                          <td>GPT-5.1</td>
+                          <td>Topo de linha, raciocínio mais estável</td>
+                        </tr>
+                        <tr><td>GPT-5</td><td>Multimodal avançado, melhor contexto</td></tr>
+                        <tr><td>GPT-4o</td><td>Áudio nativo, rápido e multimodal</td></tr>
+                        <tr><td>GPT-4.1</td><td>Equilíbrio custo/performance</td></tr>
+
+                        <!-- Claude -->
+                        <tr style="background-color: #f2f2f2;">
+                          <td rowspan="3">Claude</td>
+                          <td>Claude 4.5 Sonnet</td>
+                          <td>Mais inteligente para tarefas do dia a dia</td>
+                        </tr>
+                        <tr style="background-color: #f2f2f2;"><td>Claude 4.5 Haiku</td><td>Mais leve e voltado para respostas rápidas</td></tr>
+                        <tr style="background-color: #f2f2f2;"><td>Claude 4.1 Opus</td><td>Modelo premium, ideal para brainstorming</td></tr>
+
+                        <!-- Gemini -->
+                        <tr>
+                          <td rowspan="2">Gemini</td>
+                          <td>Gemini 2.5 Flash</td>
+                          <td>Mais rápido, forte em código e multimodalidade</td>
+                        </tr>
+                        <tr><td>Gemini 2.5 Pro</td><td>Contexto gigantesco, multimodal completo</td></tr>
+
+                        <!-- Perplexity -->
+                        <tr style="background-color: #f2f2f2;">
+                          <td rowspan="6">Perplexity</td>
+                          <td>Perplexity LLM</td>
+                          <td>Otimizado para busca com precisão factual</td>
+                        </tr>
+                        <tr style="background-color: #f2f2f2;"><td>GPT-5.1</td><td>Topo de linha, raciocínio mais estável</td></tr>
+                        <tr style="background-color: #f2f2f2;"><td>Claude 4.5 Sonnet</td><td>Mais inteligente para tarefas do dia a dia</td></tr>
+                        <tr style="background-color: #f2f2f2;"><td>Claude 4.1 Opus</td><td>Modelo premium, ideal para brainstorming</td></tr>
+                        <tr style="background-color: #f2f2f2;"><td>Gemini 2.5 Pro</td><td>Multimodal com contexto extenso</td></tr>
+                        <tr style="background-color: #f2f2f2;"><td>Grok 4</td><td>Contexto gigantesco, multimodal completo</td></tr>
+
+                        <!-- Copilot -->
+                        <tr>
+                          <td rowspan="3">Copilot</td>
+                          <td>GPT-5</td>
+                          <td>Multimodal avançado, melhor contexto</td>
+                        </tr>
+                        <tr><td>GPT-4.1</td><td>Modelo padrão em 2025</td></tr>
+                        <tr><td>Phi-3.5</td><td>Leve, ideal para dispositivos</td></tr>
+
+                        <!-- Grok -->
+                        <tr style="background-color: #f2f2f2;">
+                          <td rowspan="1">Grok</td>
+                          <td>Grok 4</td>
+                          <td>Multimodal avançado, maior contexto</td>
+                        </tr>
+
+                        <!-- DeepSeek -->
+                        <tr>
+                          <td rowspan="3">DeepSeek</td>
+                          <td>DeepSeek V3</td>
+                          <td>Forte em raciocínio matemático</td>
+                        </tr>
+                        <tr><td>DeepSeek V2</td><td>Boa performance geral</td></tr>
+                        <tr><td>DeepSeek Coder V2</td><td>Especializado em programação</td></tr>
+
+                        <!-- Qwen -->
+                        <tr style="background-color: #f2f2f2;">
+                          <td rowspan="3">Qwen</td>
+                          <td>Qwen3-Max</td>
+                          <td>Topo de linha da série Qwen</td>
+                        </tr>
+                        <tr style="background-color: #f2f2f2;"><td>Qwen3-VL-235B-A22B</td><td>Modelo avançado para visão e linguagem</td></tr>
+                        <tr style="background-color: #f2f2f2;"><td>Qwen3-Coder</td><td>Agente de programação para tarefas de longo prazo</td></tr>
+                      </tbody>
+                    </table>
+
+
+
+                    <p> Obs.: existem plataformas que atuam como <strong>agregadores de modelos</strong>, permitindo o uso de modelos de empresas diferentes em um mesmo ambiente. Exemplos:
+                    <ul>
+                        <li><strong>LMArena</strong> (<a href="https://lmarena.ai/" target="_blank">https://lmarena.ai/</a>)</li>
+                        <li><strong>Adapta</strong> (<a href="https://adapta.org/" target="_blank">https://adapta.org/</a>)</li>
+                    </ul> 
+                </div>
+
+
+                <h3>✴️ O conceito de <i>Tokens</i></h3>
+                <div class="tool-card">
+                    <p><strong>Definição:</strong> <i>Tokens</i> são as unidades básicas de processamento dos modelos de IA. Os textos são quebrados em pequenas partes (os <i>tokens</i>) para serem processados.</p>
+                    <ul>
+                        <li>Um <i>token</i> pode ser uma palavra, parte de palavra, pontuação ou espaço</li>
+                        <li><strong>Regra prática:</strong> 1 <i>token</i> ≈ 0,75 palavras (aprox. 4 caracteres)</li>
+                    </ul>
+                    
+                    <h4>Por que isso importa?</h4>
+                    <ul>
+                        <li>Limita o tamanho de documentos que podem ser analisados de uma vez</li>
+                        <li>Afeta o <strong>custo de uso</strong> em plataformas pagas (cobrança por token)</li>
+                        <li>Determina o quanto a IA consegue "lembrar" em uma conversa (a sua <strong>Janela de Contexto</strong>)</li>
+                    </ul>
+
+                    <div class="success">
+                        <strong>Exemplo prático de tokenização:</strong>
+                        <p>Frase: "O requerente solicita a expedição de certidão eleitoral"</p>
+                        <p><i>Tokens</i>: ["O", " requer", "ente", " solic", "ita", " a", " exped", "ição", " de", " cert", "idão", " ele", "itor", "al"] = <strong>14 tokens</strong></p>
+                        <ul>
+                            <li>Texto de 10 páginas ≈ 3.000-5.000 <i>tokens</i></li>
+                            <li>Relatório de 30 páginas ≈ 10.000-15.000 <i>tokens</i></li>
+                        </ul>
+                    </div>
+
+                    <h4>Sites que realizam contagem de <i>tokens</i>:</h4>
+                    <ul>
+                        <li><a href="https://platform.openai.com/tokenizer" target="_blank">https://platform.openai.com/tokenizer</a></li>
+                        <li><a href="https://www.prompttokencounter.com" target="_blank">https://www.prompttokencounter.com</a></li>
+                        <li><a href="https://vcalazans.dev/tools/token-calculator" target="_blank">https://vcalazans.dev/tools/token-calculator</a></li>
+                    </ul>
+                </div> 
+
+
+
+                <h2>2. Tipos Principais de IA</h2>
+
+                <div class="tool-card">
+                    <h3>IA Generativa</h3>
+                    <p>Cria conteúdo novo (texto, imagem, áudio, vídeo) com base em padrões de dados anteriores. Exige que os modelos sejam treinados a partir de um grande volume de dados (LLMs). O modelo pode ser <strong>implantado</strong>:</p><br>
+
+                    <p><strong>a) Localmente (<i>on premise</i>):</strong>
+                    <ul>
+                        <li>O treinamento do modelo passa a ser responsabilidade da empresa cliente, demandando altos custos</li>
+                        <li>Após treinado, o modelo pode ser utilizado sem custos adicionais significativos</li>
+                    </ul>
+
+                    <p><strong>b) Disponibilizado por uma <i>Big Tech</i>:</strong>
+
+                    <ul>
+                        <li>O modelo é treinado pela <i>Big Tech</i>, sem custos para a empresa cliente</li>
+                        <li>O custo passa a residir na utilização do modelo</li>
+                    <ul>    
+                </div>
+
+                <div class="tool-card">
+                    <h3>IA Preditiva</h3>
+                    <p>Analisa dados históricos para prever eventos, resultados ou padrões futuros. Os modelos devem sejam treinados para aprender padrões relacionados às áreas em que irão atuar.</p><br>
+
+                    <p>O modelo geralmente é <strong>implantado localmente</strong>:</p>
+                    <ul>
+                        <li>O seu treinamento é responsabilidade da empresa cliente</li>
+                        <li>Os custos de treinamento variam dependendo da área de atuação e da base de treinamento
+                        <li>Após treinado, o modelo pode ser utilizado sem custos adicionais significativos</li>
+                    </ul>            
+                </div>
+            </section>
+
+            <!-- SEÇÃO FERRAMENTAS -->
+            <section id="ferramentas">
+                <h2>Panorama das Principais Ferramentas</h2>
+
+                <!-- ChatGPT -->
+                <div class="card">                
+                    <div class="tool-header">
+                        <span class="tool-name">
+                            ChatGPT
+                            <span class="tool-badge">POPULAR</span>
+                        </span>
+                        <span class="tool-price">Gratuito / Pago</span>
+                    </div>
+                    
+                    <p style="font-size: 1.05em; color: #666; margin-bottom: 20px; font-style: italic;">
+                        <strong>OpenAI</strong> - Modelo de linguagem mais popular mundialmente, desenvolvido pela OpenAI
+                    </p>
+                    
+                    <div class="tool-features">
+                        <h4>✨ Principais Características:</h4>
+                        <ul>
+                            <li>Interface intuitiva e amigável</li>
+                            <li>Capacidade de manter conversas longas e contextuais</li>
+                            <li>Permite upload de documentos (PDFs, Word) na versão paga</li>
+                            <li>Possui "memória" das conversas anteriores</li>
+                            <li>Integração com plugins e ferramentas externas</li>
+                        </ul>
+                    </div>
+
+                    <h4>💰 Versões e Preços:</h4>
+                    <table style="margin: 15px 0; font-size: 0.95em;">
+                        <tr>
+                            <td style="width: 20%; font-weight: 600;">Gratuita</td>
+                            <td style="width: 20%;"><span style="color: var(--accent);">US$ 0</span></td>
+                            <td>Acesso básico ao ChatGPT com GPT-5.1; limitações em mensagens, uploads, geração de imagens; memória limitada.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20%; font-weight: 600;">Go</td>
+                            <td style="width: 20%;"><span style="color: var(--accent);">R$ 39,99/mês</span></td>
+                            <td>Plano intermediário; GPT-5 com 10x mais mensagens, uploads e imagens; memória dobrada; ferramentas integradas; mais acessível.
+                        </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20%; font-weight: 600;">Plus<br></td>
+                            <td style="width: 20%;"><span style="color: var(--accent);">US$ 20/mês</span></td>
+                            <td>Acesso ao GPT-4, GPT-5 e GPT-5.1 com maior velocidade e mensagens; uploads, geração de imagens, recursos profissionais.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20%; font-weight: 600;">Pro<br></td>
+                            <td style="width: 20%;"><span style="color: var(--accent);">US$ 200/mês</span></td>
+                            <td>Uso ilimitado do GPT-5.1; mensagens e uploads ilimitados; funções avançadas para pesquisa, criação de vídeos e agentes Codex.</td>
+                        </tr>
+                    </table>
+
+                    <div class="success">
+                        <strong>✅ Pontos Fortes:</strong>
+                        <ul>
+                            <li>Excelente para rascunhos iniciais de documentos</li>
+                            <li>Boa compreensão de contexto administrativo brasileiro</li>
+                            <li>Capacidade de adaptar tom formal/técnico</li>
+                            <li>Útil para brainstorming de soluções</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning">
+                        <strong>⚠️ Limitações:</strong>
+                        <ul>
+                            <li>Pode "alucinar" (inventar legislação ou normas que não existem)</li> 
+                            <li>Não acessa bases de dados especializadas</li>
+                            <li>Versão gratuita é limitada</li>
+                        </ul>
+                    </div>
+
+
+                    <h4>🔗 Link de acesso:</h4>
+                    <ul>
+                        <li><a href="https://chatgpt.com/" target="blank">https://chatgpt.com/</a></li>
+                    </ul>    
+                </div>
+
+                <!-- Claude -->
+                <div class="tool-card">                    
+                    <div class="tool-header">
+                        <span class="tool-name">
+                            Claude
+                            <span class="tool-badge" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">RECOMENDADO</span>
+                        </span>
+                        <span class="tool-price">Gratuito / Pago</span>
+                    </div>
+                    
+                    <p style="font-size: 1.05em; color: #666; margin-bottom: 20px; font-style: italic;">
+                        <strong>Anthropic</strong> - Desenvolvido pela Anthropic com foco em segurança, ética e respostas mais "honestas"
+                    </p>
+                    
+                    <div class="tool-features">
+                        <h4>✨ Principais Características:</h4>
+                        <ul>
+                            <li>Janela de contexto de até 200.000 tokens (processa documentos muito longos)</li>
+                            <li>Excelente capacidade de análise e síntese</li>
+                            <li>Mais cuidadoso ao admitir limitações (menos "alucinações")</li>
+                            <li>Interface limpa e funcional</li>
+                            <li>Melhor performance em tarefas analíticas complexas</li>
+                        </ul>
+                    </div>
+
+                    <h4>💰 Versões e Preços:</h4>
+                    <table style="margin: 15px 0; font-size: 0.95em;">
+                        <tr>
+                            <td style="width: 20%; font-weight: 600;">Gratuita</td>
+                            <td style="width: 20%;"><span style="color: var(--accent);">US$ 0</span></td>
+                            <td>Acesso à interface web e apps com o modelo Sonnet. Ideal para testes e uso casual, com limites reduzidos de mensagens e contexto.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20%; font-weight: 600;">Pro</td>
+                            <td style="width: 20%;"><span style="color: var(--accent);">R$ 110/mês</span></td>
+                            <td>5x mais capacidade que o plano gratuito, acesso aos modelos Claude 4 Opus e Sonnet, maiores limites de mensagens/contexto, prioridade para novos recursos.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20%; font-weight: 600;">Max</td>
+                            <td style="width: 20%;"><span style="color: var(--accent);">A partir de RS$ 550/mês</span></td>
+                            <td>Voltado para uso intensivo: até 20x a capacidade do Pro, acesso prioritário a recursos e modelos avançados, capacidade preferencial em horários de pico.</td>
+                        </tr>
+                    </table>
+
+                    <div class="success">
+                        <strong>✅ Pontos Fortes:</strong>
+                        <ul>
+                            <li>Excepcional para análise de processos longos (pode processar centenas de páginas)</li>
+                            <li>Respostas mais estruturadas e fundamentadas</li>
+                            <li>Menor tendência a inventar informações</li>
+                            <li>Excelente para comparação de documentos</li>
+                            <li>Ótimo para revisão crítica de textos administrativos</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning">
+                        <strong>⚠️ Limitações:</strong>
+                        <ul>
+                            <li>Menos "criativo" que ChatGPT para textos persuasivos</li>
+                            <li>Interface sem tantos recursos extras</li>
+                            <li>Menor base de usuários (menos tutoriais disponíveis)</li>
+                        </ul>
+                    </div>
+
+                    <h4>🔗 Link de acesso:</h4>
+                    <ul>
+                        <li><a href="https://claude.ai/" target="blank">https://claude.ai/</a></li>
+                    </ul>    
+                </div>
+
+                <!-- Gemini -->
+                <div class="card">                    
+                    <div class="tool-header">
+                        <span class="tool-name">
+                            Gemini
+                            <span class="tool-badge" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">GOOGLE</span>
+                        </span>
+                        <span class="tool-price">Gratuito / Pago</span>
+                    </div>
+                    
+                    <p style="font-size: 1.05em; color: #666; margin-bottom: 20px; font-style: italic;">
+                        <strong>Google</strong> - Modelo de IA do Google com integração nativa ao ecossistema da empresa
+                    </p>
+                    
+                    <div class="tool-features">
+                        <h4>✨ Principais Características:</h4>
+                        <ul>
+                            <li>Acesso direto à busca do Google (informações atualizadas)</li>
+                            <li>Janela de contexto de até 2 milhões de tokens</li>
+                            <li>Integração com Google Workspace</li>
+                            <li>Capacidade multimodal (texto, imagem, vídeo)</li>
+                        </ul>
+                    </div>
+
+                    <h4>💰 Versões e Preços:</h4>
+                    <table style="margin: 15px 0; font-size: 0.95em;">
+                        <tr>
+                            <td style="width: 20%; font-weight: 600;">Gratuita</td>
+                            <td style="width: 20%;"><span style="color: var(--accent);">US$ 0</span></td>
+                            <td>Acesso ao modelo 2.5 Flash com taxas de uso limitadas e acesso restrito aos recursos mais avançados.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20%; font-weight: 600;">Plus</td>
+                            <td style="width: 20%;"><span style="color: var(--accent);">R$ 96,99/mês</span></td>
+                            <td>Acesso ao modelo 2.5 Pro, com uso até 20 vezes maior que o básico, acesso ao modo Deep Research, integração com aplicativos do Google, geração de vídeos pelo modelo Veo 3, além de 2 TB de armazenamento em nuvem.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20%; font-weight: 600;">Ultra</td>
+                            <td style="width: 20%;"><span style="color: var(--accent);">US$ 250/mês</span></td>
+                            <td>Utilização de modelos mais potentes, acesso antecipado a recursos experimentais, limites ampliados e 30 TB de armazenamentos.</td>
+                        </tr>
+
+
+
+                        <tr>
+                            <td style="width: 30%; font-weight: 600;">Gratuita</td>
+                            <td>Gemini Pro, acesso básico</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">Advanced<br><span style="color: var(--accent);">R$ 97/mês</span></td>
+                            <td>Gemini Ultra, integração completa com Google Workspace</td>
+                        </tr>
+                    </table>
+
+                    <div class="success">
+                        <strong>✅ Pontos Fortes para Servidores Públicos:</strong>
+                        <ul>
+                            <li>Acesso a informações atualizadas via busca</li>
+                            <li>Pode processar documentos extremamente longos</li>
+                            <li>Integração com Gmail (análise de e-mails institucionais)</li>
+                            <li>Útil para pesquisa de legislação recente</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning">
+                        <strong>⚠️ Limitações:</strong>
+                        <ul>
+                            <li>Menos preciso em análises complexas (comparado a Claude e GPT-4)</li>
+                            <li>Interface menos intuitiva</li>
+                            <li>Respostas às vezes genéricas demais</li>
+                        </ul>
+                    </div>
+
+                    <h4>🎯 Aplicações Práticas:</h4>
+                    <ul>
+                        <li>Pesquisa de legislação e jurisprudência recente</li>
+                        <li>Análise de processos muito extensos</li>
+                        <li>Integração com fluxo de trabalho no Google Workspace</li>
+                        <li>Verificação de informações atualizadas</li>
+                    </ul>
+
+                    <h4>🔗 Link de acesso:</h4>
+                    <ul>
+                        <li><a href="https://gemini.google.com" target="blank">https://gemini.google.com</a></li>
+                    </ul>  
+                </div>
+
+                <!-- Perplexity AI -->
+                <div class="tool-card">                    
+                    <div class="tool-header">
+                        <span class="tool-name">
+                            Perplexity AI
+                            <span class="tool-badge" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);">PESQUISA</span>
+                        </span>
+                        <span class="tool-price">Gratuito / Pago</span>
+                    </div>
+                    
+                    <p style="font-size: 1.05em; color: #666; margin-bottom: 20px; font-style: italic;">
+                        <strong>Perplexity</strong> - Ferramenta de busca potencializada por IA que combina busca na internet com síntese de informações
+                    </p>
+                    
+                    <div class="tool-features">
+                        <h4>✨ Principais Características:</h4>
+                        <ul>
+                            <li>Fornece fontes e citações para cada resposta</li>
+                            <li>Acesso a informações em tempo real</li>
+                            <li>Interface focada em pesquisa</li>
+                            <li>Modo "Pro" com busca acadêmica e capacidade de processar documentos</li>
+                        </ul>
+                    </div>
+
+                    <h4>💰 Versões e Preços:</h4>
+                    <table style="margin: 15px 0; font-size: 0.95em;">
+                        <tr>
+                            <td style="width: 30%; font-weight: 600;">Gratuita</td>
+                            <td>Buscas limitadas por dia</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">Pro<br><span style="color: var(--accent);">US$ 20/mês</span></td>
+                            <td>Buscas ilimitadas, upload de documentos, busca acadêmica</td>
+                        </tr>
+                    </table>
+
+                    <div class="success">
+                        <strong>✅ Pontos Fortes para Servidores Públicos:</strong>
+                        <ul>
+                            <li>Excelente para pesquisa jurídica e administrativa (legislação, jurisprudência, doutrina)</li>
+                            <li>Fornece fontes verificáveis</li>
+                            <li>Acesso a informações atualizadas</li>
+                            <li>Reduz "alucinações" por estar conectado à internet</li>
+                            <li>Modo acadêmico acessa bases científicas</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning">
+                        <strong>⚠️ Limitações:</strong>
+                        <ul>
+                            <li>Não é ideal para redação de documentos</li>
+                            <li>Foco em pesquisa, não em geração de conteúdo</li>
+                            <li>Limitação de buscas na versão gratuita</li>
+                        </ul>
+                    </div>
+
+                    <h4>🎯 Aplicações Práticas:</h4>
+                    <ul>
+                        <li>Pesquisa de jurisprudência recente</li>
+                        <li>Verificação de legislação atualizada</li>
+                        <li>Busca de doutrina e artigos administrativos</li>
+                        <li>Fact-checking de informações</li>
+                        <li>Pesquisa preliminar para casos</li>
+                    </ul>
+
+                    <h4>🔗 Link de acesso:</h4>
+                    <ul>
+                        <li><a href="https://www.perplexity.ai" target="blank">https://www.perplexity.ai</a></li>
+                    </ul> 
+                </div>
+
+                <!-- NotebookLM -->
+                <div class="card">
+                    <div class="tool-header">
+                        <span class="tool-name">
+                            NotebookLM
+                            <span class="tool-badge" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">GRATUITO</span>
+                        </span>
+                        <span class="tool-price">Gratuito</span>
+                    </div>
+                    
+                    <p style="font-size: 1.05em; color: #666; margin-bottom: 20px; font-style: italic;">
+                        <strong>Google</strong> - Ferramenta do Google especializada em análise de documentos que cria um "caderno de notas" inteligente
+                    </p>
+                    
+                    <div class="tool-features">
+                        <h4>✨ Principais Características:</h4>
+                        <ul>
+                            <li>Upload de até 50 documentos por "notebook"</li>
+                            <li>Análise profunda de PDFs, documentos, sites</li>
+                            <li>Geração de resumos, FAQs e guias de estudo</li>
+                            <li>Recurso único: Gera podcasts em áudio sobre seus documentos (Audio Overviews)</li>
+                            <li>Totalmente gratuito</li>
+                        </ul>
+                    </div>
+
+                    <h4>💰 Versões e Preços:</h4>
+                    <table style="margin: 15px 0; font-size: 0.95em;">
+                        <tr>
+                            <td style="width: 30%; font-weight: 600;">Gratuita</td>
+                            <td>Acesso completo a todos os recursos, sem limitações significativas</td>
+                        </tr>
+                    </table>
+
+                    <div class="success">
+                        <strong>✅ Pontos Fortes para Servidores Públicos:</strong>
+                        <ul>
+                            <li>Ideal para preparação de casos complexos</li>
+                            <li>Centraliza análise de múltiplos documentos (processos, relatórios, pareceres)</li>
+                            <li>Gera resumos executivos automaticamente</li>
+                            <li>Identifica conexões entre documentos</li>
+                            <li>Audio Overview útil para "revisar" processos enquanto dirige ou se desloca</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning">
+                        <strong>⚠️ Limitações:</strong>
+                        <ul>
+                            <li>Não gera documentos (apenas analisa)</li>
+                            <li>Foco em análise, não em produção</li>
+                            <li>Dependente de upload de documentos</li>
+                        </ul>
+                    </div>
+
+                    <h4>🎯 Aplicações Práticas:</h4>
+                    <ul>
+                        <li>Preparação para reuniões (analisa processo completo)</li>
+                        <li>Due diligence (análise de múltiplos documentos)</li>
+                        <li>Revisão de processos complexos</li>
+                        <li>Organização de pesquisa administrativa</li>
+                        <li>Criação de briefings de casos</li>
+                    </ul>
+
+                    <h4>🔗 Link de acesso:</h4>
+                    <ul>
+                        <li><a href="https://notebooklm.google.com" target="blank">https://notebooklm.google.com</a></li>
+                    </ul>
+                </div>
+
+                <!-- DeepSeek -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-name">
+                            DeepSeek
+                            <span class="tool-badge" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); animation: pulse-warning 2s ease-in-out infinite;">ATENÇÃO</span>
+                        </span>
+                        <span class="tool-price">Gratuito</span>
+                    </div>
+                    
+                    <p style="font-size: 1.05em; color: #666; margin-bottom: 20px; font-style: italic;">
+                        <strong>China (DeepSeek AI)</strong> - Modelo chinês de código aberto que ganhou destaque por performance equiparável a modelos ocidentais
+                    </p>
+                    
+                    <div class="tool-features">
+                        <h4>✨ Principais Características:</h4>
+                        <ul>
+                            <li>Totalmente gratuito</li>
+                            <li>Código aberto (transparência)</li>
+                            <li>Performance surpreendente para um modelo gratuito</li>
+                            <li>Interface simples</li>
+                        </ul>
+                    </div>
+
+                    <h4>💰 Versões e Preços:</h4>
+                    <table style="margin: 15px 0; font-size: 0.95em;">
+                        <tr>
+                            <td style="width: 30%; font-weight: 600;">Gratuita</td>
+                            <td>Acesso completo sem custo</td>
+                        </tr>
+                    </table>
+
+                    <div class="success">
+                        <strong>✅ Pontos Fortes:</strong>
+                        <ul>
+                            <li>Custo zero para experimentação</li>
+                            <li>Desempenho razoável em português</li>
+                            <li>Bom para tarefas mais simples</li>
+                        </ul>
+                    </div>
+
+                    <div class="danger">
+                        <strong>⚠️ ATENÇÃO - Limitações Importantes:</strong>
+                        <ul>
+                            <li>Menos refinado para questões administrativas complexas</li>
+                            <li><strong style="color: #dc2626; font-size: 1.1em;">⚠️ Preocupações com privacidade de dados (servidores na China)</strong></li>
+                            <li>Conhecimento jurídico brasileiro limitado</li>
+                            <li>Comunidade menor (menos suporte)</li>
+                        </ul>
+                        <p style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #dc2626;">
+                            <strong style="color: #991b1b;">🔐 AVISO DE SEGURANÇA:</strong><br>
+                            <span style="color: #7f1d1d;">EVITE enviar dados sensíveis ou sigilosos! A legislação chinesa permite acesso governamental a dados armazenados em seus servidores.</span>
+                        </p>
+                    </div>
+
+                    <h4>🎯 Aplicações Práticas:</h4>
+                    <ul>
+                        <li>Testes iniciais sem custo</li>
+                        <li>Tarefas administrativas simples</li>
+                        <li>Tradução de documentos públicos</li>
+                        <li>Rascunhos preliminares não-sensíveis</li>
+                    </ul>
+
+                    <h4>🔗 Link de acesso:</h4>
+                    <ul>
+                        <li><a href="https://chat.deepseek.com" target="blank">https://chat.deepseek.com</a></li>
+                    </ul>
+                </div>
+
+                <!-- Qwen -->
+                <div class="card">
+                    <div class="tool-header">
+                        <span class="tool-name">
+                            Qwen
+                            <span class="tool-badge" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">CÓDIGO ABERTO</span>
+                        </span>
+                        <span class="tool-price">Gratuito</span>
+                    </div>
+                    
+                    <p style="font-size: 1.05em; color: #666; margin-bottom: 20px; font-style: italic;">
+                        <strong>Alibaba Cloud</strong> - Modelo desenvolvido pela Alibaba com foco em eficiência e multilinguismo
+                    </p>
+                    
+                    <div class="tool-features">
+                        <h4>✨ Principais Características:</h4>
+                        <ul>
+                            <li>Gratuito para uso</li>
+                            <li>Boa performance em português</li>
+                            <li>Código aberto (transparência técnica)</li>
+                            <li>Múltiplas versões adaptadas para diferentes tarefas</li>
+                        </ul>
+                    </div>
+
+                    <h4>💰 Versões e Preços:</h4>
+                    <table style="margin: 15px 0; font-size: 0.95em;">
+                        <tr>
+                            <td style="width: 30%; font-weight: 600;">Gratuita</td>
+                            <td>Acesso completo, código aberto</td>
+                        </tr>
+                    </table>
+
+                    <div class="success">
+                        <strong>✅ Pontos Fortes:</strong>
+                        <ul>
+                            <li>Totalmente gratuito</li>
+                            <li>Código aberto permite auditoria</li>
+                            <li>Boa performance em diversas línguas</li>
+                            <li>Alternativa interessante para experimentação</li>
+                        </ul>
+                    </div>
+
+                    <div class="danger">
+                        <strong>⚠️ ATENÇÃO - Mesmas Preocupações de Privacidade do DeepSeek:</strong>
+                        <ul>
+                            <li><strong style="color: #dc2626;">Legislação chinesa permite acesso governamental a dados</strong></li>
+                            <li>Servidores localizados na China</li>
+                            <li>Menos especializado em contexto administrativo brasileiro</li>
+                            <li>Comunidade de desenvolvimento menor</li>
+                        </ul>
+                        <p style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #f59e0b;">
+                            <strong style="color: #92400e;">⚠️ RECOMENDAÇÃO:</strong><br>
+                            <span style="color: #78350f;">Use apenas para conteúdo público ou genérico. NUNCA para dados confidenciais ou informações processuais sensíveis.</span>
+                        </p>
+                    </div>
+
+                    <h4>🎯 Aplicações Práticas:</h4>
+                    <ul>
+                        <li>Exploração de alternativas gratuitas</li>
+                        <li>Tarefas administrativas não-sensíveis</li>
+                        <li>Comparação de resultados entre modelos</li>
+                        <li>Tradução de documentos públicos</li>
+                        <li>Experimentação com modelos de código aberto</li>
+                    </ul>
+
+                    <h4>🔗 Link de acesso:</h4>
+                    <ul>
+                        <li><a href="https://chat.qwen.ai" target="blank">https://chat.qwen.ai/</a></li>
+                    </ul>
+                </div>
+
+
+               
+
+                <h2>Recomendações de Uso</h2>
+
+                <div class="tool-card">
+                    <h3>✴️ Pacote Básico Recomendado (Gratuito)</h3>
+                    <p>Para iniciar sem custos:</p>
+                    <ol>
+                        <li><strong>ChatGPT (gratuito)</strong> - Redação e tarefas gerais</li>
+                        <li><strong>Claude (gratuito)</strong> - Análise de processos</li>
+                        <li><strong>Perplexity (gratuito)</strong> - Pesquisa administrativa</li>
+                        <li><strong>NotebookLM</strong> - Preparação de casos</li>
+                    </ol>
+                </div>
+
+                <div class="highlight">
+                    <h3>✴️ Pacote Profissional (Pago)</h3>
+                    <p>Para uso intensivo e profissional:</p>
+                    <ol>
+                        <li><strong>ChatGPT Plus ou Claude Pro</strong> - Principal ferramenta de trabalho (escolha um)</li>
+                        <li><strong>Perplexity Pro</strong> - Pesquisa avançada</li>
+                        <li><strong>NotebookLM</strong> - Análise de casos (continua gratuito)</li>
+                    </ol>
+                    <p><strong>Investimento:</strong> US$ 40/mês (≈ R$ 240/mês) para máxima produtividade</p>
+                </div>
+            </section>
+
+
+            <!-- SEÇÃO ÉTICA -->
+            <section id="etica">
+                <h2>Regulamentação de IA no Poder Judiciário</h2>
+                
+                <div class="highlight" style="background: linear-gradient(120deg, #667eea 0%, #764ba2 100%);">
+                    <h3>✴️ Resolução CNJ nº 615/2025: Marco Regulatório</h3>
+                    <p style="font-size: 1.1em; line-height: 1.8;">
+                        Em <strong>11 de março de 2025</strong>, o Conselho Nacional de Justiça publicou a Resolução nº 615, que estabelece <strong>diretrizes obrigatórias</strong> para o desenvolvimento, uso e governança de Inteligência Artificial no Poder Judiciário brasileiro.
+                    </p>
+                    <p style="margin-top: 15px;">
+                        <strong>Por que isso importa para você, servidor público?</strong><br>
+                        Esta Resolução define seus direitos, deveres e limitações ao usar IA em sua prática profissional, além de regular como tribunais e servidores podem empregar essas tecnologias.
+                    </p>
+                </div>
+
+                <!-- Princípios Fundamentais -->
+                <h2 style="margin-top: 40px;">Princípios Fundamentais</h2>
+                
+                <div class="grid">
+                    <div class="grid-item" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <h4 style="color: white; margin-top: 0;">👤 Centralidade Humana</h4>
+                        <p>A IA é ferramenta auxiliar. Decisões finais são sempre humanas.</p>
+                    </div>
+                    
+                    <div class="grid-item" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <h4 style="color: white; margin-top: 0;">⚖️ Justiça e Equidade</h4>
+                        <p>Proibição de vieses discriminatórios e garantia de igualdade.</p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="grid-item" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <h4 style="color: white; margin-top: 0;">🔍 Transparência</h4>
+                        <p>Obrigação de informar quando IA for utilizada em processos.</p>
+                    </div>
+                    
+                    <div class="grid-item" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <h4 style="color: white; margin-top: 0;">🔐 Proteção de Dados</h4>
+                        <p>Conformidade obrigatória com LGPD e segurança da informação.</p>
+                    </div>
+                </div>
+
+                <!-- Classificação de Riscos -->
+                <h2 style="margin-top: 40px;">Classificação de Riscos das Aplicações de IA</h2>
+                
+                <p style="font-size: 1.05em; margin-bottom: 25px;">
+                    A Resolução categoriza soluções de IA em <strong>três níveis de risco</strong>, cada um com regras específicas de governança e auditoria:
+                </p>
+
+                <!-- RISCO EXCESSIVO -->
+                <div class="danger">
+                    <h3 style="margin-top: 0; color: #c62828;">🚫 RISCO EXCESSIVO - PROIBIDO (Art. 10)</h3>
+                    
+                    <p style="font-weight: 600; margin-bottom: 15px;">Aplicações VEDADAS ao Poder Judiciário:</p>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #c62828; margin-top: 0;">❌ 1. Sistemas sem Revisão Humana</h4>
+                        <ul>
+                            <li>IA que não permita revisão ou alteração pelo usuário</li>
+                            <li>Sistemas que gerem dependência absoluta sem possibilidade de ajuste</li>
+                            <li><strong>Impacto:</strong> Violação da supervisão humana obrigatória</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #c62828; margin-top: 0;">❌ 2. Perfis Preditivos de Criminalidade</h4>
+                        <ul>
+                            <li>Avaliar probabilidade de cometer crimes</li>
+                            <li>Prever reiteração delitiva (reincidência)</li>
+                            <li>Criar perfis em matéria trabalhista</li>
+                            <li><strong>Exemplo proibido:</strong> "Este réu tem 80% de chance de reincidir"</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #c62828; margin-top: 0;">❌ 3. Classificação/Ranqueamento de Pessoas</h4>
+                        <ul>
+                            <li>Classificar credibilidade de testemunhas por IA</li>
+                            <li>Avaliar "plausibilidade de direitos" por perfil pessoal</li>
+                            <li>Ranquear méritos judiciais baseado em comportamento</li>
+                            <li><strong>Impacto:</strong> Violação da dignidade e presunção de inocência</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #c62828; margin-top: 0;">❌ 4. Reconhecimento de Emoções</h4>
+                        <ul>
+                            <li>Identificar emoções por biometria (expressões faciais, voz)</li>
+                            <li><strong>Exemplo proibido:</strong> Detectar se testemunha está mentindo por análise facial</li>
+                        </ul>
+                    </div>
+
+                    <p style="background: #ffebee; padding: 15px; border-radius: 8px; margin-top: 20px; font-weight: 600; border-left: 4px solid #c62828;">
+                        ⚠️ <strong>Consequência:</strong> Soluções que se enquadrem nessas vedações devem ser imediatamente descontinuadas.
+                    </p>
+                </div>
+
+                <!-- ALTO RISCO -->
+                <div class="warning">
+                    <h3 style="margin-top: 0; color: #f57c00;">⚠️ ALTO RISCO - Uso Controlado (Art. 11)</h3>
+                    
+                    <p style="font-weight: 600; margin-bottom: 15px;">Aplicações permitidas COM rigorosa governança e auditoria:</p>
+                    
+                    <table style="margin: 20px 0;">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Categoria</th>
+                                <th>Descrição</th>
+                                <th style="width: 25%;">Exigências</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>AR1 - Perfis Comportamentais</strong></td>
+                                <td>Identificação de padrões de comportamento de pessoas ou grupos</td>
+                                <td style="background: #fff3e0;">
+                                    • Avaliação de impacto<br>
+                                    • Auditoria obrigatória<br>
+                                    • Monitoramento contínuo
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>AR2 - Valoração de Provas</strong></td>
+                                <td>Aferição e valoração de provas (documentais, testemunhais, periciais)</td>
+                                <td style="background: #fff3e0;">
+                                    • Supervisão humana<br>
+                                    • Transparência total<br>
+                                    • Revisão por servidor competente
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>AR3 - Tipificação de Crimes</strong></td>
+                                <td>Interpretação de fatos como crimes, contravenções ou atos infracionais</td>
+                                <td style="background: #fff3e0;">
+                                    • Vedado uso autônomo<br>
+                                    • Apenas suporte ao servidor<br>
+                                    • Documentação completa
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>AR4 - Aplicação de Normas</strong></td>
+                                <td>Juízos sobre aplicação de lei a fatos, quantificação/qualificação de danos</td>
+                                <td style="background: #fff3e0;">
+                                    • Análise de vieses<br>
+                                    • Registro de uso<br>
+                                    • Decisão final humana
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>AR5 - Biometria Facial</strong></td>
+                                <td>Identificação facial para monitoramento comportamental</td>
+                                <td style="background: #fff3e0;">
+                                    • Autorização prévia CNJ<br>
+                                    • Plano anti-viés racial<br>
+                                    • Auditoria rigorosa
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="background: #fff3e0; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #f57c00;">
+                        <h4 style="color: #e65100; margin-top: 0;">📋 Obrigações para Alto Risco (Art. 13 e 14)</h4>
+                        <ul style="line-height: 1.8;">
+                            <li><strong>Avaliação de Impacto Algorítmico:</strong> Análise contínua de impactos em direitos fundamentais</li>
+                            <li><strong>Dados Representativos:</strong> Treinamento com dados equilibrados e auditáveis</li>
+                            <li><strong>Registro Automatizado (Log):</strong> Rastreamento de todas as operações</li>
+                            <li><strong>Transparência:</strong> Documentação em linguagem simples do funcionamento</li>
+                            <li><strong>Mitigação de Vieses:</strong> Políticas ativas contra discriminação</li>
+                            <li><strong>Explicabilidade:</strong> Capacidade de explicar como decisões são tomadas (quando tecnicamente possível)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- BAIXO RISCO -->
+                <div class="success">
+                    <h3 style="margin-top: 0; color: #2e7d32;">✅ BAIXO RISCO - Uso Livre com Monitoramento (Anexo)</h3>
+                    
+                    <p style="font-weight: 600; margin-bottom: 15px;">Aplicações permitidas com governança simplificada:</p>
+                    
+                    <div class="grid" style="margin-top: 20px;">
+                        <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                            <h4 style="color: #2e7d32; margin-top: 0;">BR1 - Atos Ordinatórios</h4>
+                            <p>Classificação de processos, enriquecimento de cadastros, certificação de atos, sumarização de documentos</p>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>Exemplo:</strong> IA que organiza processos por assunto automaticamente</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                            <h4 style="color: #2e7d32; margin-top: 0;">BR2 - Detecção de Padrões</h4>
+                            <p>Identificação de precedentes, detecção de desvios decisórios, análise jurisprudencial</p>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>Exemplo:</strong> Busca de decisões similares em casos análogos</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                            <h4 style="color: #2e7d32; margin-top: 0;">BR3 - Relatórios Gerenciais</h4>
+                            <p>Análises jurimét ricas, integração de fontes, estatísticas processuais</p>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>Exemplo:</strong> Painel de produtividade de unidade judicial</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                            <h4 style="color: #2e7d32; margin-top: 0;">BR4 - Apoio à Redação</h4>
+                            <p>Produção de rascunhos de atos administrativos com supervisão e versão final do servidor</p>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>Exemplo:</strong> IA que gera minuta de despacho ordinatório</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                            <h4 style="color: #2e7d32; margin-top: 0;">BR5 - Formatação</h4>
+                            <p>Aprimoramento ou formatação de atividade humana sem alterar resultado material</p>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>Exemplo:</strong> Correção ortográfica e formatação de documentos</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                            <h4 style="color: #2e7d32; margin-top: 0;">BR6 - Estatísticas</h4>
+                            <p>Análises estatísticas para política judiciária com supervisão contínua</p>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>Exemplo:</strong> Tempo médio de duração de processos por tipo</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                            <h4 style="color: #2e7d32; margin-top: 0;">BR7 - Transcrição</h4>
+                            <p>Conversão de áudio e vídeo em texto com revisão humana</p>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>Exemplo:</strong> Transcrição automática de audiências</p>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                            <h4 style="color: #2e7d32; margin-top: 0;">BR8 - Anonimização</h4>
+                            <p>Ocultação de dados pessoais para conformidade com LGPD</p>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>Exemplo:</strong> Remoção automática de CPFs e nomes em documentos públicos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DIREITOS DOS SERVIDORES -->
+                <h2 style="margin-top: 50px;">Direitos dos Servidores Públicos e Partes</h2>
+
+                <div class="tool-card">
+                    <h3 style="color: var(--primary); margin-top: 0;">✴️ Transparência Obrigatória (Art. 33)</h3>
+                    
+                    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #2196f3;">
+                        <h4 style="color: #1565c0; margin-top: 0;">✅ Direito à Informação</h4>
+                        <p><strong>Usuários externos (servidores, partes, peritos) devem ser informados de forma clara quando IA for utilizada nos serviços prestados.</strong></p>
+                        
+                        <ul style="margin-top: 15px; line-height: 1.8;">
+                            <li><strong>Linguagem simples:</strong> Informação acessível a pessoas não especializadas</li>
+                            <li><strong>Caráter consultivo:</strong> Deve ficar claro que a IA não toma decisões sozinha</li>
+                            <li><strong>Supervisão humana:</strong> Sempre haverá revisão por autoridade competente</li>
+                            <li><strong>Canais adequados:</strong> Avisos em sistemas, materiais informativos, guias explicativos</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #4caf50;">
+                        <h4 style="color: #2e7d32; margin-top: 0;">🔍 Acesso a Relatórios (Art. 12, VIII)</h4>
+                        <p><strong>Servidores públicos têm direito a:</strong></p>
+                        
+                        <ul style="margin-top: 15px; line-height: 1.8;">
+                            <li>Relatórios de auditoria das soluções de IA</li>
+                            <li>Relatórios de monitoramento contínuo</li>
+                            <li>Parametrização ao longo do ciclo de vida da solução</li>
+                            <li>Informações sobre como a IA funciona (explicabilidade)</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: #fff3e0; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #ff9800;">
+                        <h4 style="color: #e65100; margin-top: 0;">⚖️ Direito de Contestação (Art. 5º, §3º)</h4>
+                        <p><strong>Em caso de suspeita de violação de direitos fundamentais por uso de IA:</strong></p>
+                        
+                        <ul style="margin-top: 15px; line-height: 1.8;">
+                            <li>Servidores podem peticionar ao Comitê Nacional de IA</li>
+                            <li>Podem solicitar auditorias das soluções de IA</li>
+                            <li>Direito de acesso às avaliações de impacto algorítmico</li>
+                            <li>Possibilidade de questionar resultados gerados por IA</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- USO DE IA GENERATIVA POR SERVIDORES -->
+                <h2 style="margin-top: 50px;">Uso de IA Generativa (ChatGPT, Claude, etc.) - Art. 19</h2>
+
+                <div class="card">
+                    <h3 style="color: var(--primary); margin-top: 0;">✅ O Que é PERMITIDO</h3>
+                    
+                    <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Servidores PODEM usar LLMs (ChatGPT, Claude, Gemini, etc.) como ferramentas de auxílio, desde que:</p>
+                        
+                        <ol style="line-height: 2;">
+                            <li><strong>Realizem capacitação específica</strong> sobre riscos, limitações e uso ético de IA generativa</li>
+                            <li><strong>Usem como apoio à decisão,</strong> nunca como instrumento autônomo de tomada de decisão</li>
+                            <li><strong>Escolham fornecedores que respeitem proteção de dados</strong> (conformidade com LGPD)</li>
+                            <li><strong>Evitem compartilhar dados sigilosos</strong> sem anonimização prévia</li>
+                            <li><strong>Informem à chefia sobre o uso,</strong> quando aplicável</li>
+                        </ol>
+                    </div>
+
+                    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #1565c0; margin-top: 0;">💡 Exemplos de Uso Adequado:</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>✅ Rascunho inicial de documentos (com revisão e personalização posterior)</li>
+                            <li>✅ Pesquisa de legislação e doutrina (com verificação das fontes)</li>
+                            <li>✅ Estruturação de argumentos técnicos</li>
+                            <li>✅ Resumo de decisões judiciais públicas</li>
+                            <li>✅ Reformulação de textos para melhor clareza</li>
+                            <li>✅ Criação de checklists procedimentais</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="danger">
+                    <h3 style="margin-top: 0;">🚫 O Que é VEDADO (Art. 19, §3º)</h3>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #c62828; margin-top: 0;">❌ 1. Dados Sigilosos ou Protegidos por Segredo de Justiça</h4>
+                        <p style="margin-bottom: 10px;"><strong>PROIBIDO inserir em IA externa:</strong></p>
+                        <ul>
+                            <li>Processos sob segredo de justiça (integral ou parcial)</li>
+                            <li>Dados pessoais sensíveis sem anonimização</li>
+                            <li>Informações confidenciais de estratégias processuais</li>
+                            <li>Documentos com informações privilegiadas</li>
+                        </ul>
+                        <p style="background: #ffebee; padding: 12px; border-radius: 5px; margin-top: 15px; font-weight: 600;">
+                            ⚠️ <strong>Exceção:</strong> Permitido SE os dados forem devidamente anonimizados NA ORIGEM
+                        </p>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #c62828; margin-top: 0;">❌ 2. Uso em Aplicações de Alto Risco</h4>
+                        <p style="margin-bottom: 10px;"><strong>PROIBIDO usar IA privada para:</strong></p>
+                        <ul>
+                            <li>Valoração de provas</li>
+                            <li>Tipificação de crimes</li>
+                            <li>Aplicação de normas jurídicas a fatos</li>
+                            <li>Qualquer finalidade listada como "Alto Risco"</li>
+                        </ul>
+                        <p style="background: #ffebee; padding: 12px; border-radius: 5px; margin-top: 15px; font-weight: 600;">
+                            ⚠️ <strong>Regra:</strong> Use apenas para tarefas de baixo risco ou com supervisão rigorosa
+                        </p>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #c62828; margin-top: 0;">❌ 3. Fornecedores que Usam Dados para Treinamento</h4>
+                        <p style="margin-bottom: 10px;"><strong>VEDADO usar serviços que:</strong></p>
+                        <ul>
+                            <li>Utilizem seus inputs para treinar modelos sem autorização expressa</li>
+                            <li>Compartilhem dados com terceiros</li>
+                            <li>Não garantam eliminação de histórico quando solicitado</li>
+                            <li>Não respeitem padrões de privacy by design e privacy by default</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- RESPONSABILIDADES DO SERVIDOR -->
+                <h2 style="margin-top: 50px;">Responsabilidade Profissional e Ética</h2>
+
+                <div class="card">
+                    <h3 style="color: var(--primary); margin-top: 0;">O servidor é SEMPRE responsável pelo resultado final:</h3>
+                    <ul style="line-height: 2; margin-top: 15px;">
+                        <li>IA é ferramenta de assistência, não de substituição</li>
+                        <li><strong>Sempre revise e valide</strong> o conteúdo gerado</li>
+                        <li><strong>Verifique legislação e normas citadas</strong> (IAs podem inventar - "alucinações")</li>
+                        <li>Nunca entregue documentos gerados por IA sem <strong>revisão criteriosa</strong></li>
+                        <li>Mantenha seu <strong>julgamento profissional</strong> como filtro final</li>
+                        <li><strong>Personalize</strong> o conteúdo para o caso concreto</li>
+                    </ul>
+                </div>
+
+                <div class="warning">
+                    <h3>📜 Dever de Confidencialidade</h3>
+                    <ul style="line-height: 1.8;">
+                        <li><strong>Lei 8.112/90:</strong> dever de guardar sigilo</li>
+                        <li>Uso inadequado de IA pode configurar <strong>quebra de sigilo</strong></li>
+                        <li>Violações podem gerar <strong>processos administrativos e indenizações</strong></li>
+                        <li>Responsabilização por <strong>negligência na revisão</strong> de conteúdo gerado por IA</li>
+                    </ul>
+                </div>
+
+                <div class="danger">
+                    <h3>🚨 NUNCA faça isso:</h3>
+                    <table style="margin-top: 20px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">Ação Proibida</th>
+                                <th>Por Que é Grave</th>
+                                <th style="width: 25%;">Consequência</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Copiar e colar documento gerado por IA sem revisar</td>
+                                <td>Pode conter legislação falsa, erros técnicos, inadequação ao caso</td>
+                                <td style="color: #c62828; font-weight: 600;">Processo administrativo, responsabilização</td>
+                            </tr>
+                            <tr>
+                                <td>Inserir dados sigilosos em IA pública</td>
+                                <td>Violação da LGPD, quebra de sigilo profissional</td>
+                                <td style="color: #c62828; font-weight: 600;">Processo administrativo, indenização, crime</td>
+                            </tr>
+                            <tr>
+                                <td>Confiar cegamente em citações legais fornecidas por IA</td>
+                                <td>IA inventa leis, súmulas e processos inexistentes</td>
+                                <td style="color: #c62828; font-weight: 600;">Perda de credibilidade, multa, responsabilização</td>
+                            </tr>
+                            <tr>
+                                <td>Usar IA para valorar provas ou aplicar normas sem supervisão</td>
+                                <td>Vedado pela Resolução 615/2025 (alto risco)</td>
+                                <td style="color: #c62828; font-weight: 600;">Nulidade processual, responsabilização</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- BOAS PRÁTICAS -->
+                <h2 style="margin-top: 50px;">Boas Práticas para Uso Ético de IA</h2>
+
+                <div class="success">
+                    <h3 style="margin-top: 0;">1. Transparência</h3>
+                    <ul style="line-height: 1.8;">
+                        <li>Informe à chefia sobre uso de IA, se relevante</li>
+                        <li>Deixe claro que você supervisiona todo conteúdo</li>
+                        <li>Explique benefícios (maior agilidade, menor custo)</li>
+                        <li>Garanta que a qualidade não será comprometida</li>
+                    </ul>
+                </div>
+
+                <div class="success">
+                    <h3>2. Verificação Rigorosa</h3>
+                    <ul style="line-height: 1.8;">
+                        <li><strong>SEMPRE verifique:</strong> Números de leis, artigos, súmulas, jurisprudência</li>
+                        <li>Consulte fontes oficiais (Planalto, sites dos tribunais)</li>
+                        <li>Confirme vigência das normas (se não foram revogadas)</li>
+                        <li>Valide a redação de dispositivos legais</li>
+                    </ul>
+                </div>
+
+                <div class="success">
+                    <h3>3. Personalização e Expertise</h3>
+                    <ul style="line-height: 1.8;">
+                        <li>Use IA como <strong>rascunho inicial</strong>, não como produto final</li>
+                        <li>Adicione seu raciocínio técnico e análise pessoal</li>
+                        <li>Adapte à realidade específica do caso</li>
+                        <li>Inclua sua estratégia processual</li>
+                        <li>Considere jurisprudência local e perfil da unidade</li>
+                    </ul>
+                </div>
+
+                <div class="success">
+                    <h3>4. Capacitação Contínua</h3>
+                    <ul style="line-height: 1.8;">
+                        <li>Mantenha-se atualizado sobre novas tecnologias</li>
+                        <li>Participe de treinamentos sobre uso ético de IA</li>
+                        <li>Aprenda sobre limitações e riscos das ferramentas</li>
+                        <li>Acompanhe atualizações da Resolução CNJ 615/2025</li>
+                    </ul>
+                </div>
+
+
+                <!-- COMITÊ NACIONAL DE IA -->
+                <h2 style="margin-top: 50px;">Comitê Nacional de Inteligência Artificial do Judiciário</h2>
+
+                <div class="card">
+                    <h3 style="color: var(--primary); margin-top: 0;">Composição (Art. 15)</h3>
+                    
+                    <p style="margin-bottom: 20px;">Órgão plural com <strong>14 membros titulares</strong>, incluindo:</p>
+
+                    <div class="grid">
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: white; margin-top: 0;">⚖️ Magistrados</h4>
+                            <p>Conselheiros CNJ, juízes auxiliares, desembargadores</p>
+                        </div>
+
+                        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: white; margin-top: 0;">👥 Atores do Sistema</h4>
+                            <p>Servidores, Ministério Público, Defensoria Pública (com voz, sem voto)</p>
+                        </div>
+
+                        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: white; margin-top: 0;">🎓 Especialistas</h4>
+                            <p>Sociedade civil com expertise em IA, tecnologia e direitos humanos</p>
+                        </div>
+                    </div>
+
+                    <div style="background: #fff3e0; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <h4 style="color: #e65100; margin-top: 0;">⚙️ Principais Competências (Art. 16):</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Atualizar classificação de riscos anualmente</li>
+                            <li>Estabelecer normas de governança, transparência e auditoria</li>
+                            <li>Avaliar uso de ferramentas de mercado (ChatGPT, Claude, etc.)</li>
+                            <li>Determinar auditorias e monitoramento</li>
+                            <li>Criar protocolos técnicos padronizados</li>
+                            <li>Elaborar manual de boas práticas</li>
+                        </ul>
+                    </div>
+                </div>
+
+
+                <!-- RESUMO EXECUTIVO -->
+                <h2 style="margin-top: 50px;">Resumo Executivo: O Que Você Precisa Saber</h2>
+
+                <div class="highlight" style="background: linear-gradient(120deg, #1e3a5f 0%, #2c5f8d 100%);">
+                    <h3 style="color: white; margin-top: 0;">✅ PODE</h3>
+                    <ul style="color: white; line-height: 2;">
+                        <li>Usar IA generativa (ChatGPT, Claude, etc.) como ferramenta de apoio</li>
+                        <li>Gerar rascunhos, pesquisar legislação, estruturar argumentos</li>
+                        <li>Usar em tarefas de baixo risco com supervisão adequada</li>
+                        <li>Ser informado quando IA for usada em seus processos</li>
+                        <li>Acessar relatórios de auditoria e questionar resultados</li>
+                    </ul>
+
+                    <h3 style="color: white; margin-top: 30px;">❌ NÃO PODE</h3>
+                    <ul style="color: white; line-height: 2;">
+                        <li>Inserir dados sigilosos em IA externa sem anonimização</li>
+                        <li>Usar IA para valorar provas ou aplicar normas sem supervisão rigorosa</li>
+                        <li>Confiar cegamente em jurisprudência citada por IA (sempre verifique!)</li>
+                        <li>Copiar e colar conteúdo sem revisão técnica e personalização</li>
+                        <li>Delegar decisões finais à IA (responsabilidade é sempre sua)</li>
+                    </ul>
+
+                    <h3 style="color: white; margin-top: 30px;">⚠️ LEMBRE-SE</h3>
+                    <ul style="color: white; line-height: 2;">
+                        <li>Capacitação sobre IA é obrigatória e contínua</li>
+                        <li>Transparência é fundamental</li>
+                        <li>Verificação de fontes é sua responsabilidade ética</li>
+                        <li>A Resolução 615/2025 será atualizada - mantenha-se informado</li>
+                        <li>IA é ferramenta, não substituta do servidor</li>
+                    </ul>
+                </div>
+
+                <!-- RECURSOS ADICIONAIS -->
+                <div class="card" style="margin-top: 40px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+                    <h3 style="color: var(--primary); margin-top: 0;">📚 Para Saber Mais</h3>
+                    <ul style="line-height: 2;">
+                        <li><strong>Texto completo:</strong> Resolução CNJ nº 615/2025 - 
+                            <a href="https://atos.cnj.jus.br/files/original1555302025031467d4517244566.pdf" target="_blank" style="color: var(--secondary);">
+                                Acesse aqui
+                            </a>
+                        </li>
+                        <li><strong>Comitê Nacional de IA:</strong> Acompanhe publicações e diretrizes</li>
+                        <li><strong>Manual de Boas Práticas:</strong> Será elaborado pelo Comitê (Art. 19, §4º)</li>
+                    </ul>
+                </div>
+            </section>
+
+
+            <!-- SEÇÃO GLOSSÁRIO -->
+            <section id="glossario">
+                <h2>Glossário de Termos Técnicos</h2>
+
+                <div class="glossary-term">
+                    <div class="term-title">AGI (Artificial General Intelligence)</div>
+                    <div>Inteligência Artificial Geral - IA hipotética com capacidades cognitivas equivalentes às humanas em todas as áreas. Ainda não existe.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Alucinação</div>
+                    <div>Quando a IA gera informações falsas ou inventadas com confiança, como jurisprudência inexistente ou artigos de lei fictícios.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">API (Application Programming Interface)</div>
+                    <div>Interface que permite integração de IA com outros sistemas (ex: seu software administrativo se comunicar com ChatGPT).</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Chain-of-Thought</div>
+                    <div>Técnica de solicitar que a IA "pense passo a passo" antes de dar resposta final, melhorando precisão.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Contexto / Janela de Contexto</div>
+                    <div>Quantidade de informação (em tokens) que a IA consegue "lembrar" e processar simultaneamente.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Embedding</div>
+                    <div>Representação matemática de texto que permite à IA entender significados e relações semânticas.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Few-Shot Learning</div>
+                    <div>Fornecer poucos exemplos para a IA aprender o padrão desejado (ex: mostrar 2-3 exemplos de documentos antes de pedir um novo).</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Fine-Tuning</div>
+                    <div>Treinamento adicional de um modelo em dados específicos (ex: treinar especificamente em processos eleitorais).</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">LLM (Large Language Model)</div>
+                    <div>Modelo de Linguagem de Grande Escala - como GPT, Claude, Gemini.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Multimodal</div>
+                    <div>IA capaz de processar múltiplos tipos de entrada (texto, imagem, áudio, vídeo).</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Parâmetros</div>
+                    <div>Número de "conexões" internas do modelo - quanto mais parâmetros, geralmente mais capaz (GPT-4 tem trilhões).</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Prompt</div>
+                    <div>Instrução ou pergunta que você fornece à IA para obter uma resposta.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Prompt Engineering</div>
+                    <div>Arte e técnica de elaborar prompts eficazes para obter melhores resultados da IA.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">RAG (Retrieval-Augmented Generation)</div>
+                    <div>Técnica que combina busca em base de dados com geração de texto, reduzindo alucinações.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Sistema de Prompt</div>
+                    <div>Instruções permanentes que definem comportamento da IA (você não vê, mas os desenvolvedores configuram).</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Temperature</div>
+                    <div>Parâmetro que controla criatividade/aleatoriedade das respostas (baixa = mais previsível, alta = mais criativa).</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Token</div>
+                    <div>Unidade básica de processamento - aproximadamente 0,75 palavras em português.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Training Data</div>
+                    <div>Dados usados para treinar a IA - trilhões de textos da internet, livros, artigos.</div>
+                </div>
+
+                <div class="glossary-term">
+                    <div class="term-title">Zero-Shot</div>
+                    <div>Pedir que a IA faça algo sem fornecer nenhum exemplo prévio.</div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO FAQ -->
+            <section id="faq">
+                <h2>Perguntas Frequentes (FAQ)</h2>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">1</span>
+                            A IA vai substituir servidores públicos?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>Não.</strong> A IA é uma ferramenta de aumento de capacidade, não de substituição. O raciocínio técnico, a estratégia processual, o relacionamento com cidadãos, a negociação e o julgamento ético continuam sendo exclusivamente humanos.</p>
+                        <p>A IA automatiza tarefas repetitivas e libera tempo para o que realmente importa: pensar estrategicamente e atender bem os cidadãos.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">2</span>
+                            É ético usar IA no exercício da função pública?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Sim, desde que:</strong></p>
+                        <ul>
+                            <li>Você mantenha a responsabilidade profissional sobre todo o trabalho</li>
+                            <li>Respeite o sigilo e confidencialidade</li>
+                            <li>Não substitua seu julgamento profissional pelo da IA</li>
+                            <li>Seja transparente quando apropriado</li>
+                            <li>Sempre revise e valide o conteúdo gerado</li>
+                        </ul>
+                        <p>A legislação não proíbe uso de tecnologia - pelo contrário, o servidor deve se manter atualizado.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">3</span>
+                            Posso confiar nas citações jurisprudenciais e legais fornecidas pela IA?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>NÃO confie cegamente.</strong> IAs frequentemente "alucinam" jurisprudência e citações.</p>
+                        <p><strong>SEMPRE verifique:</strong></p>
+                        <ul>
+                            <li>Números de processos em sites dos tribunais</li>
+                            <li>Artigos de lei no texto legal oficial</li>
+                            <li>Ementas e decisões nas bases oficiais</li>
+                        </ul>
+                        <p>Use a IA para apontar direções, mas valide você mesmo cada citação.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">4</span>
+                            Qual ferramenta devo escolher se puder pagar apenas uma versão <i>premium</i>?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Depende do seu foco:</strong></p>
+                        <ul>
+                            <li><strong>ChatGPT Plus:</strong> Mais versátil, melhor para redação criativa e variedade de tarefas</li>
+                            <li><strong>Claude Pro:</strong> Melhor para análise de documentos longos e complexos</li>
+                            <li><strong>Perplexity Pro:</strong> Melhor para pesquisa jurídica com fontes</li>
+                        </ul>
+                        <p><strong>Recomendação:</strong></p>
+                        <ul>
+                            <li>Para servidores que lidam com muito processo e análise documental: <strong>Claude Pro</strong></li>
+                            <li>Para servidores que precisam redigir muito: <strong>ChatGPT Plus</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">5</span>
+                            Posso usar IA para casos sigilosos ou sob segredo de justiça?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Com extrema cautela:</strong></p>
+                        <ul>
+                            <li>Anonimize completamente todas as informações</li>
+                            <li>Prefira versões enterprise com garantias contratuais</li>
+                            <li>Melhor ainda: use apenas para estruturar raciocínio, sem inserir dados do caso</li>
+                            <li>Em casos de segredo de justiça, considere não usar IA online</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">6</span>
+                            A IA tem acesso à jurisprudência atualizada dos tribunais brasileiros?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+
+                    <div class="faq-answer">
+                        <p><strong>Não diretamente.</strong> Os modelos têm conhecimento até a data de corte de treinamento.</p>
+                        <p><strong>Para jurisprudência recente:</strong></p>
+                        <ul>
+                            <li>Use Perplexity AI (busca em tempo real)</li>
+                            <li>Use Gemini (busca Google integrada)</li>
+                            <li>Ou pesquise em sites oficiais e depois use IA para analisar o que encontrou</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">7</span>
+                            Posso ser punido por usar IA?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Não pelo simples uso de IA</strong>, mas pode ser punido por:</p>
+                        <ul>
+                            <li>Quebra de sigilo ao compartilhar dados sensíveis</li>
+                            <li>Negligência ao não revisar conteúdo gerado (ex: documento com jurisprudência falsa)</li>
+                            <li>Erro grosseiro que a revisão humana evitaria</li>
+                        </ul>
+                        <p><strong>Use IA como ferramenta, não como substituto da sua diligência profissional.</strong></p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">8</span>
+                            Como faço para a IA "aprender" meu estilo de escrita?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Técnicas:</strong></p>
+                        <ul>
+                            <li>Forneça exemplos de textos seus anteriores</li>
+                            <li>Peça para a IA analisar seu estilo primeiro</li>
+                            <li>Dê feedback e peça ajustes ("mais formal", "menos prolixa")</li>
+                            <li>Use instruções específicas ("escreva como um servidor público brasileiro experiente")</li>
+                        </ul>
+                        <p>Nos próximos blocos, aprenderemos técnicas avançadas para isso.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">9</span>
+                            Quanto tempo vou economizar usando IA?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Varia muito, mas estudos indicam:</strong></p>
+                        <ul>
+                            <li>Redação de documentos: <strong>40-60% mais rápido</strong></li>
+                            <li>Revisão de processos: <strong>50-70% mais rápido</strong></li>
+                            <li>Pesquisa administrativa: <strong>30-50% mais rápido</strong></li>
+                            <li>Tarefas administrativas: <strong>60-80% mais rápido</strong></li>
+                        </ul>
+                        <p><strong>Importante:</strong> No início, pode até ser mais lento enquanto você aprende. O ganho vem com a prática.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">10</span>
+                            Preciso aprender programação para usar IA?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Não!</strong> As ferramentas que estamos usando são conversacionais - você "fala" com elas em português normal.</p>
+                        <p>Nenhum conhecimento técnico é necessário. Nos blocos seguintes, você aprenderá técnicas de comunicação eficaz com IA, mas nada de código.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">11</span>
+                            E se a IA gerar conteúdo errado em um documento que eu não revisei?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Você é o responsável.</strong> A IA é sua assistente, mas você assina o documento.</p>
+                        <p>Assim como seria responsável por um erro de um colega que não supervisionou, é responsável pelo conteúdo gerado por IA.</p>
+                        <p><strong>Revisão criteriosa é obrigatória.</strong></p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">12</span>
+                            Posso usar IA em reuniões ou durante atendimentos?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Depende:</strong></p>
+                        <ul>
+                            <li><strong>Preparação antes:</strong> Sim, totalmente adequado</li>
+                            <li><strong>Durante reuniões:</strong> Possível, mas com discrição (pesquisas rápidas, consultas)</li>
+                            <li><strong>Para gerar manifestações em tempo real:</strong> Não recomendado - falta tempo para revisão adequada</li>
+                        </ul>
+                        <p><strong>Use IA para estar preparado, não como muleta durante o ato.</strong></p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">13</span>
+                            A IA pode me ajudar no atendimento ao cidadão?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Sim, indiretamente:</strong></p>
+                        <ul>
+                            <li>Criação de conteúdo informativo</li>
+                            <li>Elaboração de materiais educativos</li>
+                            <li>Estruturação de respostas a dúvidas comuns</li>
+                            <li>Otimização de textos para comunicação</li>
+                        </ul>
+                        <p><strong>⚠️ Mas respeite as regras de transparência e sigilo</strong></p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">14</span>
+                            Qual a diferença entre usar IA gratuita vs. paga para servidores?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+
+                    <div class="faq-answer">
+                        <p><strong>Versão gratuita:</strong></p>
+                        <ul>
+                            <li>Limitações de uso (mensagens por período)</li>
+                            <li>Modelos menos avançados</li>
+                            <li>Sem upload de documentos (em alguns casos)</li>
+                            <li>Sem prioridade em horários de pico</li>
+                        </ul>
+                        <p><strong>Versão paga:</strong></p>
+                        <ul>
+                            <li>Uso ilimitado ou muito maior</li>
+                            <li>Modelos mais avançados e precisos</li>
+                            <li>Upload e análise de documentos</li>
+                            <li>Respostas mais rápidas</li>
+                            <li>Melhor para uso profissional intensivo</li>
+                        </ul>
+                        <p><strong>Recomendação:</strong> Para experimentar: comece com gratuito. Para uso profissional diário: pago vale a pena.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            <span class="faq-number">15</span>
+                            Como garantir que não estou plagiando ao usar conteúdo gerado por IA?
+                        </div>
+                        <span class="icon">▼</span>
+                    </div>
+                    
+                    <div class="faq-answer">
+                        <ul>
+                            <li>IA não plagia no sentido tradicional - ela gera texto novo</li>
+                            <li><strong>MAS:</strong> sempre revise e personalize o conteúdo</li>
+                            <li>Adicione seu raciocínio e análise pessoal</li>
+                            <li>Adapte à realidade específica do caso</li>
+                            <li>Use como ponto de partida, não como produto final</li>
+                        </ul>
+                        <p><strong>O resultado final deve ser seu trabalho aprimorado pela IA, não trabalho da IA assinado por você.</strong></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 40px 20px; color: white; background: rgba(0,0,0,0.2); margin-top: 50px; border-top: 2px solid rgba(255,255,255,0.1);">
+        <p style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
+            © 2025 - Workshop - IA na prática aplicada ao TRE/RN
+        </p>
+        <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.9;">
+            Material didático para uso educacional
+        </p>
+        
+        <!-- Divisória discreta -->
+        <div style="width: 60px; height: 1px; background: rgba(255,255,255,0.3); margin: 25px auto;"></div>
+        
+        <!-- Créditos do desenvolvedor -->
+        <p style="font-size: 0.8em; margin-top: 8px;">
+            <a href="mailto:osmar.fernandes@tre-rn.jus.br" style="color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.3s ease;">
+                osmar.fernandes@tre-rn.jus.br
+            </a>
+        </p>
+    </footer>  
+
+    <script>
+        function showSection(sectionId) {
+            // Esconde todas as seções
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active de todos os botões
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Mostra a seção selecionada
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Adiciona active no botão clicado
+            event.target.classList.add('active');
+            
+            // Scroll suave para o topo
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            
+            // Atualiza barra de progresso
+            updateProgressBar();
+        }
+
+        function toggleFAQ(element) {
+            element.classList.toggle('open');
+        }
+
+        function updateProgressBar() {
+            const sections = ['intro', 'ferramentas', 'etica', 'glossario', 'faq'];
+            const activeSection = document.querySelector('section.active');
+            const activeSectionId = activeSection.id;
+            const currentIndex = sections.indexOf(activeSectionId);
+            const progress = ((currentIndex + 1) / sections.length) * 100;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Inicializa a barra de progresso
+        updateProgressBar();
+
+        // Adiciona efeito de scroll suave para toda a página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animação de fade-in para cards ao scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observa todos os cards e tool-cards
+            document.querySelectorAll('.card, .tool-card, .faq-item').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(el);
+            });
+
+            // Adiciona efeito de hover nos botões de navegação
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px) scale(1.05)';
+                });
+                btn.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('active')) {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    }
+                });
+            });
+
+            // Easter egg: Ctrl + K para busca rápida de seções
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'k') {
+                    e.preventDefault();
+                    const sections = ['intro', 'ferramentas', 'comparativo', 'etica', 'glossario', 'faq'];
+                    const sectionNames = ['Introdução', 'Ferramentas', 'Comparativo', 'Ética', 'Glossário', 'FAQ'];
+                    const search = prompt('Ir para seção:\n' + sectionNames.map((name, i) => `${i+1}. ${name}`).join('\n'));
+                    if (search && search >= 1 && search <= 6) {
+                        const buttons = document.querySelectorAll('.nav-btn');
+                        buttons[search - 1].click();
+                    }
+                }
+            });
+        });
+
+        // Adiciona indicador de leitura
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Função para imprimir seção específica
+        function printSection() {
+            window.print();
+        }
+
+        // Adiciona botão de impressão (opcional)
+        const style = document.createElement('style');
+        style.textContent = `
+            @media print {
+                nav, .nav-btn, header, footer, .progress-bar {
+                    display: none !important;
+                }
+                section {
+                    display: block !important;
+                    page-break-after: always;
+                }
+                .content-wrapper {
+                    box-shadow: none !important;
+                    margin: 0 !important;
+                    padding: 20px !important;
+                }
+                body {
+                    background: white !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Função para expandir/colapsar cards de LLMs
+        function toggleLLM(card) {
+            // Fecha todos os outros cards
+            document.querySelectorAll('.llm-card').forEach(c => {
+                if (c !== card && c.classList.contains('open')) {
+                    c.classList.remove('open');
+                }
+            });
+            
+            // Toggle do card clicado
+            card.classList.toggle('open');
+        }        
+    </script>
+</body>
+</html>
+[file content end]
